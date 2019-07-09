@@ -1,6 +1,2 @@
-* linguist-vendored
-*.js linguist-vendored=true
-*.html linguist-vendored=false
-*.css linguist-vendored=false
-*.css linguist-language=Python
+* linguist-language=Python
 
