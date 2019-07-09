@@ -1,3 +1,3 @@
-*.html linguist-detectable=false
-*.css linguist-detectable=false
+*.html linguist-language=Django
+*.css linguist-language=Djangi
 
