@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    Admin Dashboard
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+    name='viewport' />
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link href="{% static '/templates/in-Administrator/assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/templates/in-Administrator/assets/css/now-ui-dashboard.css' %}" rel="stylesheet" />
+  <link href="{% static '/templates/in-Administrator/assets/demo/demo.css' %}" rel="stylesheet" />
+</head>
+
+<body class="">
+  <div class="wrapper ">
+    <div class="sidebar" data-color="orange">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
+    -->
+      <div class="logo">
+        <a href="http://localhost:8000" class="simple-text logo-mini">
+
+        </a>
+        <a href="http://localhost:8000" class="simple-text"
+          style="font-size: 25px;font-family: 'Montserrat', sans-serif;">
+          Eduwiz
+        </a>
+      </div>
+      <div class="sidebar-wrapper" id="sidebar-wrapper">
+        <ul class="nav">
+          <li>
+            <a href="/signin/dashboard">
+              <i class="now-ui-icons design_app"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="active">
+            <a href="/signin/addremove">
+              <i class="now-ui-icons users_single-02"></i>
+              <p>Add / remove</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/changecredentials">
+              <i class="now-ui-icons ui-2_settings-90"></i>
+              <p>Change Credentials</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/declaration">
+              <i class="now-ui-icons ui-1_bell-53"></i>
+              <p>Declaration</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/viewdata">
+              <i class="now-ui-icons education_paper"></i>
+              <p>View Data</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/Feescoll">
+              <i class="now-ui-icons design_bullet-list-67"></i>
+              <p>Fees collection</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/Attendancemanager">
+              <i class="now-ui-icons files_single-copy-04"></i>
+              <p>Attendance manager</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel" id="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <div class="navbar-toggle">
+              <button type="button" class="navbar-toggler">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </button>
+            </div>
+            <a class="navbar-brand" href="#">No. of students per standard</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+            aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <ul class="navbar-nav">
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="now-ui-icons users_single-02"> </i>Administrator
+                  <p>
+                    <span class="d-lg-none d-md-block"></span>
+                  </p>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" style="pointer-events: none;color:Black;" href="http://www.google.com">Hello
+                    {{uname}}</a>
+                  <a class="dropdown-item" data-toggle="modal" data-target="#mdl">Change Admin Password</a>
+                  <a class="dropdown-item" href="/logout">Log out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+      <!--modal change Password-->
+      <div class="modal fade" id="mdl">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Change admin Password<p style="font-size:15px;color:gray">
+                Enter
+                new password for Administrator account</p>
+            </h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="adminpwdchange">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Clerk_name">Enter new password :</label>
+                  <input class="form-control" style="background-color: white;color:black" type="password" name=""
+                    id="pwd" placeholder="New password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                    onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Password must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters' : ''); if(this.checkValidity()) form.pwd2.pattern = this.value;"
+                    required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Clerk_id">Confirm password :</label>
+                  <input class="form-control" style="background-color: white;color:black" type="password" name=""
+                    id="pwd2" placeholder="Confirm password"
+                    onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Passwords doesn't match : '');"
+                    title="Passwords doesnt match" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="Submit" class="btn btn-primary">Submit</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--modal change Password end-->
+      <div class="panel-header panel-header-lg">
+        <canvas id="bigDashboardChart"></canvas>
+      </div>
+      <!-- content -->
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="places-buttons">
+              <div class="row">
+                <div class="col-md-6 ml-auto mr-auto text-center">
+                  <h4 class="card-title">
+                    Add / Remove
+                    <p class="category">Choose your option</p>
+                  </h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 ml-auto mr-auto">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl1"
+                        style="height: 100px;font-size: 15px">New Student Registration</button>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl2"
+                        style="height: 100px;font-size: 15px">New Faculty/Teacher
+                        Registration</button>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl3"
+                        style="height: 100px;font-size: 15px">Remove
+                        student</button>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl4"
+                        style="height: 100px;font-size: 15px">Remove
+                        Faculty/Teacher</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end content -->
+      <!--  new student -->
+      <div class="modal fade" id="mdl1">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Student Registration</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="newstudentform">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-5">
+                  <label for="exampleFormControlSelect1">std : </label>
+                  <select class="exampleFormControlSelect" name="standard" id="exampleFormControlSelect1" required>
+                    <option value="" selected disabled>Select std</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <span id="enrollasperstd"><span id="enrollvalue">Enroll : </span>
+                    <input class="form-control" type="number" name="Enrollment" id="Enroll" readonly hidden>
+                  </span>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <div class="col-4">
+                  <label for="#firstname">First name :</label>
+                  <input class="form-control" type="text" name="first_name" id="firstname" placeholder="First name"
+                    style="width:110%" required>
+                </div>
+                <div class="col-4">
+                  <label for="#middlename">Middle name :</label>
+                  <input class="form-control" type="text" name="middle_name" id="middlename" placeholder="middle name"
+                    required>
+                </div>
+                <div class="col-4">
+                  <label for="#lastname">Last name :</label>
+                  <input class="form-control" type="text" name="last_name" id="lastname" placeholder="last name"
+                    required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-11">
+                  <label for="#fathername">Father's full name</label>
+                  <input class="form-control" type="text" name="father_name" id="fathername"
+                    placeholder="Father's full name" style="width:110%" required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-11">
+                  <label for="#fatheroccupation">Father's occupation</label>
+                  <input class="form-control" type="text" name="father_occupation" id="fatheroccupation"
+                    placeholder="Father's occupation" style="width:110%" required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-6">
+                  <label for="#DOB">Date of birth</label>
+                  <input type="date" class="form-control" name="DOB" id="DOB" required>
+                </div>
+                <div class="col-6">
+                  <label class="label">Email</label>
+                  <input class="form-control" type="email" id="email" name="email" autocomplete="on"
+                    placeholder="Email ID">
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label class="label">Phone Number <span class="lblsp">(without +91)</span></label>
+                  <input class="form-control" id="mobile" type="text" pattern="[6789][0-9]{9}" name="phone"
+                    title="Please enter a valid mobile number" autocomplete="off" placeholder="Mobile" required>
+                </div>
+              </div>
+              <div class="input-group">
+
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Address">Address</label>
+                  <textarea rows="2" cols="40" name="address" class="form-control" id="Address" value="Mike"
+                    placeholder="Address" required></textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Next >">
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--  End new student -->
+      <!--  add Faculty -->
+      <div class="modal fade" id="mdl2">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Faculty Registration</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="addfacultyform">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-4">
+                  <span id="facultyenrolllabel">Enroll : </span>
+                </div>
+                <input class="form-control" type="number" name="facultyenroll" id="faculty_enroll" readonly hidden>
+              </div>
+
+              <div class="input-group">
+                <div class="col-4">
+                  <label for="#faculty_firstname">First name :</label>
+                  <input class="form-control" type="text" name="" id="faculty_firstname" placeholder="First name"
+                    style="width:110%" required>
+                </div>
+                <div class="col-4">
+                  <label for="#faculty_middlename">Middle name :</label>
+                  <input class="form-control" type="text" name="" id="faculty_middlename" placeholder="First name"
+                    required>
+                </div>
+                <div class="col-4">
+                  <label for="#faculty_lastname">Last name :</label>
+                  <input class="form-control" type="text" name="" id="faculty_lastname" placeholder="First name"
+                    required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-6">
+                  <label for="#faculty_DOB">Date of birth</label>
+                  <input type="date" class="form-control" id="faculty_DOB" required>
+                </div>
+                <div class="col-6">
+                  <label class="label" for="faculty_email">Email</label>
+                  <input class="form-control" type="email" id="faculty_email" name="email" autocomplete="on"
+                    placeholder="Email ID" required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#faculty_subject2">Subject</label>
+                  <input type="text" id="faculty_subject2" class="form-control" placeholder="Ex. Maths, Science etc."
+                    required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="faculty_mobile" class="label">Phone Number <span class="lblsp">(without
+                      +91)</span></label>
+                  <input class="form-control" type="text" pattern="[6789][0-9]{9}" name="phone" id="faculty_mobile"
+                    title="Please enter a valid mobile number" autocomplete="off" placeholder="Mobile" required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#faculty_Address">Address</label>
+                  <textarea rows="2" cols="40" class="form-control" id="faculty_Address" value="Mike"
+                    placeholder="Address"></textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Next >">
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--  End add Faculty -->
+      <!--  remove student -->
+      <div class="modal fade" id="mdl3">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Remove student</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="removeform"> {% csrf_token %}
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-5">
+                  <label for="removestudent_std">std : </label>
+                  <select class="removestudent_std" id="removestudent_std" name="standard" required
+                    onchange="getdata()">
+                    <option value="" selected disabled>Select std</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                </div>
+
+                <div class="col-6">
+                  <label for="#Enroll">Enroll :</label>
+                  <input value="" type="number" name="student_Enroll_toremove" id="student_Enroll_toremove2"
+                    placeholder="Enrollment no." style="width:100px" onkeyup="getdata()" onclick="getdata()" required>
+                </div>
+              </div>
+            </div>
+            <span id="hiddenremove2" hidden>
+              <h2 class="display-4">No Student found</h2>
+            </span>
+            <span id="hiddenremove" hidden>
+              <div class="input-group">
+                <div class="col-11">
+                  <label for="#firstnametoremove">Name :</label>
+                  <input class="form-control" type="text" name="first_nametoremove" id="firstnametoremove"
+                    placeholder="Name" style="width:110%" required readonly>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-11">
+                  <label for="#fathernametoremove">Father's full name</label>
+                  <input class="form-control" type="text" name="father_name" id="fathernametoremove"
+                    placeholder="Father's full name" style="width:110%" required readonly>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-11">
+                  <label for="#fatheroccupationtoremove">Father's occupation</label>
+                  <input class="form-control" type="text" name="father_occupation" id="fatheroccupationtoremove"
+                    placeholder="Father's occupation" style="width:110%" required readonly>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-6">
+                  <label for="#DOBtoremove">Date of birth</label>
+                  <input type="text" class="form-control" name="DOBtoremove" id="DOBtoremove" required readonly>
+                </div>
+                <div class="col-6">
+                  <label class="label" for="#emailtoremove">Email</label>
+                  <input class="form-control" type="email" id="emailtoremove" name="emailtoremove" autocomplete="on"
+                    placeholder="Email ID" readonly>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label class="label" for="mobiletoremove">Phone Number <span class="lblsp">(without
+                      +91)</span></label>
+                  <input class="form-control" id="mobiletoremove" type="text" pattern="[6789][0-9]{9}" name="phone"
+                    title="Please enter a valid mobile number" autocomplete="off" placeholder="Mobile" required
+                    readonly>
+                </div>
+              </div>
+              <div class="input-group">
+
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Addresstoremove">Address</label>
+                  <textarea rows="2" cols="40" name="addresstoremove" class="form-control" id="Addresstoremove"
+                    value="Mike" placeholder="Address" required readonly></textarea>
+                </div>
+              </div>
+
+            </span>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input class="btn btn-danger" type="button" id="deletetrigger" value="Delete" onclick="removestudent()"
+                disabled>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--  end remove student -->
+      <!--  remove Faculty -->
+      <div class="modal fade" id="mdl4">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Remove Faculty</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="removefacultyform">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-6">
+                  <label for="#faculty_Enroll_toremove">Enrollment no. :</label>
+                  <input class="form-control" type="number" name="" id="faculty_Enroll_toremove"
+                    placeholder="Enrollment no." onkeyup="getfacultydata()" onclick="getfacultydata()" required>
+                </div>
+              </div>
+              <span id="hiddenremove2forfaculty" hidden>
+                <h2 class="display-4">No Faculty data found</h2>
+              </span>
+              <span id="hiddenremoveforfaculty" hidden>
+                <div class="input-group">
+                  <div class="col-11">
+                    <label for="#remove_faculty_name">Name :</label>
+                    <input class="form-control" type="text" name="remove_faculty_name" id="remove_faculty_name"
+                      placeholder="Name" style="width:110%" required readonly>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <div class="col-6">
+                    <label for="#remove_faculty_DOB">Date of birth</label>
+                    <input type="date" class="form-control" id="remove_faculty_DOB" required readonly>
+                  </div>
+                  <div class="col-6">
+                    <label class="label" for="remove_faculty_email">Email</label>
+                    <input class="form-control" type="email" id="remove_faculty_email" name="email" autocomplete="on"
+                      placeholder="Email ID" required readonly>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <div class="col-12">
+                    <label for="#remove_faculty_subject2">Subject</label>
+                    <input type="text" id="remove_faculty_subject2" class="form-control"
+                      placeholder="Ex. Maths, Science etc." required readonly>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <div class="col-12">
+                    <label for="#remove_faculty_mobile" class="label">Phone Number <span class="lblsp">(without
+                        +91)</span></label>
+                    <input class="form-control" type="text" pattern="[6789][0-9]{9}" name="phone"
+                      id="remove_faculty_mobile" title="Please enter a valid mobile number" autocomplete="off"
+                      placeholder="Mobile" required readonly>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <div class="col-12">
+                    <label for="#remove_faculty_Address">Address</label>
+                    <textarea rows="2" cols="40" class="form-control" id="remove_faculty_Address" value="Mike"
+                      placeholder="Address" required readonly></textarea>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="button" id="deletetrigger2" class="btn btn-danger" value="Delete" onclick="removefaculty()"
+                disabled>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--  end remove Faculty -->
+      <footer class="footer">
+        <div class="container-fluid">
+          <nav>
+            <ul>
+              <li>
+                <a href="http://www.vapsquare.tk">
+                  Blog
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script>
+    aa = [parseInt({{ st1 }}), parseInt({{ st2 }}), parseInt({{ st3 }}), parseInt({{ st4 }}), parseInt({{ st5 }}), parseInt({{ st6 }}), parseInt({{ st7 }}), parseInt({{ st8 }}), parseInt({{ st9 }}), parseInt({{ st10 }}), parseInt({{ st11 }}), parseInt({{ st12 }})];
+  </script>
+  <script src="{% static '/templates/in-Administrator/assets/js/core/jquery.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/core/popper.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/core/bootstrap.min.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+  <script src=".."></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/plugins/chartjs.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/plugins/bootstrap-notify.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/now-ui-dashboard.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/demo/demo.js' %}"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      // Javascript method's body can be found in assets/js/demos.js
+      demo.initDashboardPageCharts(aa);
+
+    });
+    $('#mdl1').on('hidden.bs.modal', function () {
+      hideaction();
+    });
+    $('#mdl4').on('hidden.bs.modal', function () {
+      hideaction();
+    });
+    $('#mdl3').on('hidden.bs.modal', function () {
+      hideaction();
+    });
+    $('#mdl2').on('hidden.bs.modal', function () {
+      hideaction();
+    });
+    function hideaction() {
+      document.getElementById("newstudentform").reset();
+      document.getElementById("removefacultyform").reset();
+      document.getElementById("removeform").reset();
+      document.getElementById("addfacultyform").reset();
+      $("#deletetrigger").prop("disabled", true);
+      $("#deletetrigger2").prop("disabled", true);
+      $("#hiddenremove").prop("hidden", true);
+      $("#hiddenremove2").prop("hidden", true);
+      $("#hiddenremoveforfaculty").prop("hidden", true);
+      $("#hiddenremove2forfaculty").prop("hidden", true);
+      $('#faculty_enroll').val("Enroll : ");
+      $('#facultyenrolllabel').html("");
+    }
+    $('#mdl2').on('show.bs.modal', function () {
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/getfacultyenroll/',
+        success: function (result) {
+          //document.write(result.enroll);
+          $('#faculty_enroll').val(result.enroll);
+          $('#facultyenrolllabel').html("Enroll : " + $('#faculty_enroll').val());
+        },
+        error: function (error) {
+          $('faculty_enroll').val("Enroll : can not get enroll");
+          $('facultyenrolllabel').val("");
+        }
+      });
+    })    
+    $(".exampleFormControlSelect").change(function () {
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/getenroll/',
+        data: {
+          'standard': document.getElementById("exampleFormControlSelect1").value
+        },
+        success: function (result) {
+          document.getElementById('enrollvalue').innerHTML = "Enroll : " + result.enroll;
+          document.getElementById('Enroll').value = result.enroll;
+        },
+        error: function (error) {
+          document.write(error)
+        }
+      })
+    })
+    $("#newstudentform").submit(function (event) {
+      event.preventDefault();
+      $("#mdl1").modal("hide");
+      standard = $("#exampleFormControlSelect1").val();
+      enroll = $("#Enroll").val();
+      name = $("#firstname").val() + " " + $("#middlename").val() + " " + $("#lastname").val();
+      father_name = $("#fathername").val();
+      father_occupation = $("#fatheroccupation").val();
+      DOB = $("#DOB").val();
+      Email = $("#email").val();
+      mobile = $("#mobile").val();
+      address = $("#Address").val();
+      data1 = {
+        'standard': standard,
+        'enroll': enroll,
+        'name': name,
+        'father_name': father_name,
+        'father_occupation': father_occupation,
+        'DOB': DOB,
+        'Email': Email,
+        'mobile': mobile,
+        'address': address,
+      }
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/newstudent/',
+        data: data1,
+        success: function (result) {
+          $.notify({
+            message: result.msg
+          }, {
+              type: 'info'
+            });
+        },
+        error: function (error) {
+          $.notify({
+            message: "Unable to add student. Please try again later."
+          }, {
+              type: 'danger'
+            });
+        }
+      })
+    })
+    //
+    function removefaculty() {
+      enroll = $("#faculty_Enroll_toremove").val();
+      data2 = {
+        'enroll': enroll,
+      }
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this faculty data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            $.ajax({
+              type: 'POST',
+              dataType: 'JSON',
+              url: '/removefaculty/',
+              data: data2,
+              success: function (result) {
+                $('#mdl').modal('toggle');
+                $.notify({
+                  message: result.msg
+                }, {
+                    type: 'info'
+                  });
+              },
+              error: function (error) {
+                $.notify({
+                  message: "Unable to delete faculty. may be faculty data is no longer exist."
+                }, {
+                    type: 'danger'
+                  });
+              }
+            })
+            $("#mdl4").modal("hide");
+          }
+        });
+    }
+    //
+    $("#addfacultyform").submit(function (event) {
+      event.preventDefault();
+      $("#mdl2").modal("hide");
+      enroll = $("#faculty_enroll").val();
+      name = $("#faculty_firstname").val() + " " + $("#faculty_middlename").val() + " " + $("#faculty_lastname").val();
+      DOB = $("#faculty_DOB").val();
+      Email = $("#faculty_email").val();
+      Subject2 = $("#faculty_subject2").val();
+      mobile = $("#faculty_mobile").val();
+      address = $("#faculty_Address").val();
+      data1 = {
+        'enroll': enroll,
+        'name': name,
+        'DOB': DOB,
+        'Email': Email,
+        'Subjects': Subject2,
+        'mobile': mobile,
+        'address': address,
+      }
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/newfaculty/',
+        data: data1,
+        success: function (result) {
+          $.notify({
+            message: result.msg
+          }, {
+              type: 'info'
+            });
+        },
+        error: function (error) {
+          $.notify({
+            message: "Unable to add faculty. Please try again later."
+          }, {
+              type: 'danger'
+            });
+        }
+      })
+    })
+
+    //
+    function getdata() {
+      standard = $("#removestudent_std").val();
+      enroll = $("#student_Enroll_toremove2").val();
+      data2 = {
+        'stdstd': standard,
+        'enroll': enroll,
+      }
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/getdata/',
+        data: data2,
+        success: function (result) {
+          $("#firstnametoremove").val(result.name);
+          $("#fathernametoremove").val(result.fathername);
+          $("#fatheroccupationtoremove").val(result.fatherocc);
+          $("#DOBtoremove").val(result.dob);
+          $("#emailtoremove").val(result.email);
+          $("#mobiletoremove").val(result.mobile);
+          $("#Addresstoremove").val(result.address);
+          $("#deletetrigger").prop("disabled", false);
+          $("#hiddenremove").prop("hidden", false)
+          $("#hiddenremove2").prop("hidden", true);
+        },
+        error: function (error) {
+          $("#firstnametoremove").val("  ");
+          $("#fathernametoremove").val("  ");
+          $("#fatheroccupationtoremove").val("  ");
+          $("#DOBtoremove").val("  ");
+          $("#emailtoremove").val("  ");
+          $("#mobiletoremove").val("  ");
+          $("#Addresstoremove").val("  ");
+          $("#deletetrigger").prop("disabled", true);
+          $("#hiddenremove").prop("hidden", true)
+          $("#hiddenremove2").prop("hidden", false)
+        }
+      })
+    }
+    function getfacultydata() {
+      enroll = $("#faculty_Enroll_toremove").val();
+      data3 = {
+        'enroll': enroll,
+      }
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/getfacultydata/',
+        data: data3,
+        success: function (result) {
+          $("#remove_faculty_name").val(result.name);
+          //$("#remove_faculty_DOB").val(result.dob);
+          $("#remove_faculty_DOB").val(String(result.dob)[6] + String(result.dob)[7] + String(result.dob)[8] + String(result.dob)[9] + "-" + String(result.dob)[3] + String(result.dob)[4] + "-" + String(result.dob)[0] + String(result.dob)[1]);
+          $("#remove_faculty_email").val(result.email);
+          $("#remove_faculty_subject2").val(result.subject);
+          $("#remove_faculty_mobile").val(result.mobile);
+          $("#remove_faculty_Address").val(result.address);
+          $("#deletetrigger2").prop("disabled", false);
+          $("#hiddenremoveforfaculty").prop("hidden", false)
+          $("#hiddenremove2forfaculty").prop("hidden", true);
+        },
+        error: function (error) {
+          $("#firstnametoremove").val("  ");
+          $("#fathernametoremove").val("  ");
+          $("#fatheroccupationtoremove").val("  ");
+          $("#DOBtoremove").val("  ");
+          $("#emailtoremove").val("  ");
+          $("#mobiletoremove").val("  ");
+          $("#Addresstoremove").val("  ");
+          $("#deletetrigger2").prop("disabled", true);
+          $("#hiddenremoveforfaculty").prop("hidden", true)
+          $("#hiddenremove2forfaculty").prop("hidden", false)
+        }
+      })
+    }
+    function removestudent() {
+      standard = $("#removestudent_std").val();
+      enroll = $("#student_Enroll_toremove2").val();
+      data2 = {
+        'stdstd': standard,
+        'enroll': enroll,
+      }
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this student data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            $.ajax({
+              type: 'POST',
+              dataType: 'JSON',
+              url: '/removestudent/',
+              data: data2,
+              success: function (result) {
+                $('#mdl').modal('toggle');
+                $.notify({
+                  message: result.msg
+                }, {
+                    type: 'info'
+                  });
+              },
+              error: function (error) {
+                $.notify({
+                  message: "Unable to delete student. may be student data is no longer exist."
+                }, {
+                    type: 'danger'
+                  });
+              }
+            })
+            $("#mdl3").modal("hide");
+          }
+        });
+    }
+    $("#adminpwdchange").submit(function (event) {
+      event.preventDefault();
+      $("#mdl").modal("hide");
+      pwd = $("#pwd").val();
+      data3 = { "newpwd": pwd }
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/changeadminpwd/',
+        data: data3,
+        success: function (result) {
+          $.notify({
+            message: result.msg
+          }, {
+              type: 'success'
+            });
+        },
+        error: function (error) {
+          $.notify({
+            message: "Unable to change admin password. Please try again later."
+          }, {
+              type: 'danger'
+            });
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>

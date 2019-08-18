@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404,HttpResponseRedirect,JsonResponse
 from arc4 import ARC4
 from django.views.decorators.csrf import csrf_exempt
-from home.models import Administrator, Student_detail,Faculty_detail,attendance_faculty,attendance_student,trigger,totalfees,feesrecord,declarationtoall
+from home.models import *
+from django.core.mail import send_mail,EmailMessage
+from django.conf import settings
 from django.db.models import Avg, Max, Min, Sum
 import random
 import hashlib
@@ -10,35 +12,60 @@ import json
 import smtplib
 import requests
 from datetime import date,datetime
-
+import threading
 # Create your views here.
 
-def home(request):
+class EmailThread(threading.Thread):
+    def __init__(self, subject, html_content, recipient_list):
+        self.subject = subject
+        self.recipient_list = recipient_list
+        self.html_content = html_content
+        threading.Thread.__init__(self)
+
+    def run (self):
+        #send_mail(self.subject,self.html_content,settings.EMAIL_HOST_USER,self.recipient_list,fail_silently=True) # another way for sms
+        msg = EmailMessage(self.subject, self.html_content, settings.EMAIL_HOST_USER, self.recipient_list)
+        msg.content_subtype = "html"
+        msg.send()
+
+def send_html_mail(subject, html_content, recipient_list):
+    EmailThread(subject, html_content, recipient_list).start()
+
+class MobileThread(threading.Thread):
+    def __init__(self, mobile, sms_content):
+        self.mobile = mobile
+        self.sms_content = sms_content        
+        threading.Thread.__init__(self)
+
+    def run (self):
+        send(self.mobile,self.sms_content)
+
+def send_sms(mobile,sms_content):
+    MobileThread(mobile,sms_content).start()
+
+def home(request):    
     return render(request, 'home/static/templates/home/index.html')
 
 
 def features(request):
     return render(request, "home/static/templates/home/features.html")
 
-
 def signup(request):
     if request.method == "GET":
         # /Signup/signup.html
         return render(request, "home/static/templates/Signup/Signup.html", {"checker": "signup"})
     else:
-        if request.POST['checker'] == "signup" and not checkifexists(request.POST['email']):            
+        if request.POST['checker'] == "signup" and not checkifexists(request.POST['email']) and not checkifexistsmob(request.POST["phone"]):            
+            print("debug : ",checkifexistsmob(request.POST["phone"]))
             a1 = random.randrange(100000, 1000000)
-            a2 = random.randrange(100000, 1000000)
-            msg = str("OTP (One time password for your eduwiz account sign up is %s" % a1)
-            msgmobile = str("OTP (One time password for your eduwiz account sign up is %s" % a2)
-            mob = str("91"+request.POST["phone"])
-            if sendmail(msg, request.POST["email"]) == "Success" and send(mob,msgmobile) == "success":
-                a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
-                a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
-                return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})
-            else:                
-                return render(request,"home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"check your mobile and email carefully or check your internet connection.","type":"error"})
-            
+            a2 = random.randrange(100000, 1000000)            
+            to_list = [request.POST["email"]]            
+            subject = "Eduwiz account verification"
+            send_html_mail(subject,str("OTP (One time password for your eduwiz account sign up is <br><h1>%s</h1>" % a1),to_list)
+            send_sms(str("91"+request.POST["phone"]),str("OTP (One time password for your eduwiz account sign up is %s" % a2))
+            a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
+            a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
+            return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})          
         elif request.POST['checker'] == "verify" and not checkifexists(request.POST['email']):
             if request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest() and request.POST["privatedata2"] == hashlib.md5(("%s" % request.POST["OTPmobile"]).encode()).hexdigest():
                 return render(request, "home/static/templates/Signup/password.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "checker": "password"})
@@ -48,16 +75,14 @@ def signup(request):
             return render(request, "home/static/templates/Signup/Schooldetails.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "adminmobile": request.POST["phone"], "checker": "schooldetails", "privatedata1" : rc4(request.POST["pwd"], request.POST["email"]) })
         elif request.POST['checker'] == "resend" and not checkifexists(request.POST['email']):
             a1 = random.randrange(100000, 1000000)
-            a2 = random.randrange(100000, 1000000)
-            msg = str("OTP (One time password for your eduwiz account sign up is %s" % a1)
-            msgmobile = str("OTP (One time password for your eduwiz account sign up is %s" % a2)
-            mob = str("91"+request.POST["phone"])
-            if sendmail(msg, request.POST["email"]) == "Success" and send(mob,msgmobile) == "success":
-                a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
-                a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
-                return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "OTP resended to your email", "msg2": "OTP resended to your mobile", "msgcolor": "blue"})
-            else:
-                return render(request,"home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"There is no internet connection","type":"error"})
+            a2 = random.randrange(100000, 1000000)            
+            to_list = [request.POST["email"]]            
+            subject = "Eduwiz account verification"
+            send_html_mail(subject,str("OTP (One time password for your eduwiz account sign up is <br><h1>%s</h1>" % a1),to_list)
+            send_sms(str("91"+request.POST["phone"]),str("OTP (One time password for your eduwiz account sign up is %s" % a2))
+            a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
+            a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
+            return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})
         elif request.POST['checker'] == "schooldetails" and not checkifexists(request.POST['email']):
             return render(request, "home/static/templates/Signup/createacc.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthdate"], "gender": request.POST["gender"], "email": request.POST["email"], "adminmobile": request.POST["adminmobile"] , "schoolname": request.POST["schoolname"], "schooladdress": request.POST["schooladdress"], "schoolmobile": request.POST["schoolmobile"], "privatedata1": request.POST["privatedata1"], "checker": "createacc"})
         elif request.POST['checker'] == "createacc" and not checkifexists(request.POST['email']):
@@ -70,8 +95,10 @@ def signup(request):
             # return render(request,"home/static/templates/Signup/temp.html",data)
         elif checkifexists(request.POST['email']):            
             return render(request,"home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"There is already an account with this Email. Please use another email","type":"error"})
+        elif checkifexistsmob(request.POST['phone']):            
+            return render(request,"home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"There is already an account with this Mobile number. Please use another Mobile","type":"error"})
         else:
-            return HttpResponse("navu aayu")
+            return HttpResponse("Unknown error occured")
 
 
 def signin(request):
@@ -82,13 +109,13 @@ def signin(request):
         except:
             return render(request,"home/static/templates/signin/signin.html")    
     else:
-        try:
+        try:            
             a=Administrator.objects.get(id=request.POST["id"])
-            if request.POST["usertype"] == "Administrator":
-                if a.admin_email == request.POST["email"] and a.admin_pwd == str(rc4(request.POST["pwd"], request.POST["email"])):
+            if request.POST["usertype"] == "Administrator":                
+                if a.admin_email == request.POST["email"] and a.admin_pwd == str(rc4(request.POST["pwd"], request.POST["email"])):      
                     response = HttpResponseRedirect('/signin/dashboard')
                     response.set_cookie("idloggedin",a.id)                                    
-                    response.set_cookie("userloggedin","Administrator")                                    
+                    response.set_cookie("userloggedin","Administrator")                                                        
                     return response                        
             elif request.POST["usertype"] == "Faculty":
                 a=Faculty_detail.objects.filter(school_id=request.POST["id"])
@@ -116,22 +143,23 @@ def signin(request):
                         response.set_cookie("userloggedin","Student")                                    
                         return response            
                 return HttpResponse("Student does not exists")
-        except Exception as e:
-            return render(request,"home/static/templates/signin/signin.html",{"alert":"There is no account with this ID"})    
+        except Exception as e:            
+            return render(request,"home/static/templates/signin/signin.html",{"alert":"There is no account with this ID"})            
         return render(request,"home/static/templates/signin/signin.html",{"alert":"There is no account with this ID"})    
 
 def signinwithparam(request,passparam):     
     try:
         if request.COOKIES['idloggedin']:
-            if request.COOKIES['userloggedin'] == "Administrator":
+            if request.COOKIES['userloggedin'] == "Administrator":                
                 uname = Administrator.objects.get(id = request.COOKIES['idloggedin'])
                 studentss = Student_detail.objects.filter(school_id=request.COOKIES['idloggedin'])
                 x = len
                 y = studentss.filter
-                if passparam == "dashboard":   
+                if passparam == "dashboard":                                         
                     attstat = getattstat(request.COOKIES['idloggedin']) 
+                    print("debug special 2")
                     sfp = getfeesper(request.COOKIES['idloggedin'])                   
-                    sfp2 = getfeesper2(request.COOKIES['idloggedin'])                   
+                    sfp2 = getfeesper2(request.COOKIES['idloggedin'])                                       
                     currentyear = str(datetime.now().year-1) + "-" + str(datetime.now().year)                
                     nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1) 
                     return render(request,"home/static/templates/in-Administrator/examples/dashboard.html",{"uname":uname.admin_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11],"att1":attstat[0],"att2":attstat[1],"att3":attstat[2],"att4":attstat[3],"att5":attstat[4],"att6":attstat[5],"att7":attstat[6],"att8":attstat[7],"att9":attstat[8],"att10":attstat[9],"att11":attstat[10],"att12":attstat[11]})
@@ -158,11 +186,11 @@ def signinwithparam(request,passparam):
                 studentss = Student_detail.objects.filter(school_id=request.COOKIES['idloggedin'])
                 x = len
                 y = studentss.filter                
-                if passparam == "dashboard":                        
+                if passparam == "dashboard":                                            
                     sfp = getfeesper(request.COOKIES['idloggedin'])                   
-                    sfp2 = getfeesper2(request.COOKIES['idloggedin'])                   
+                    sfp2 = getfeesper2(request.COOKIES['idloggedin'])                                       
                     currentyear = str(datetime.now  ().year-1) + "-" + str(datetime.now().year)                
-                    nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1) 
+                    nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1)                     
                     return render(request,"home/static/templates/in-Clerk/examples/dashboard.html",{"uname":uname.clerk_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11]})                
                 elif passparam == "Feescoll":
                     schoolid=int(request.COOKIES['idloggedin'][0])
@@ -213,7 +241,8 @@ def signinwithparam(request,passparam):
                     return render(request,"home/static/templates/in-Faculty/examples/declaration.html",{"uname":uname})            
         else:
             return render(request,"home/static/error/error.html")
-    except:
+    except Exception as e:
+        print(e)
         response = HttpResponseRedirect('/signin')
         response.delete_cookie('idloggedin')
         return response            
@@ -227,8 +256,8 @@ def rc4(encryptiontext, key):
 
 def sendmail(msg, destinationaddress):
     try:
-        username = '@gmail.com'
-        password = ''
+        username = 'ServiceEduwiz@gmail.com'
+        password = 'eduwiz@123'
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
         server.login(username, password)
@@ -307,6 +336,13 @@ def newstudent(request):
 def checkifexists(email):
     try:
         Administrator.objects.get(admin_email=email)
+    except:
+        return False
+    return True          
+
+def checkifexistsmob(mobile):
+    try:
+        Administrator.objects.get(admin_mobile=mobile)
     except:
         return False
     return True          
@@ -654,28 +690,34 @@ def gettotalfees(std,Schoolid):
 
 def getfeesper(schoolid):
     t = []    
-    currentyear = str(datetime.now().year-1) + "-" + str(datetime.now().year)                
-    for i in range(12):
-        feesp = feesrecord.objects.filter(school_id=schoolid,std=i+1,year=currentyear).aggregate(Sum('paidfees'))['paidfees__sum']
-        total = int(gettotalfees(std = i+1,Schoolid = schoolid)) * len(Student_detail.objects.filter(school_id=schoolid,std=i+1))        
-        if feesp is None:
-            feesp = 0
-        if not total:
-            total = 1
-        t.append((feesp*100)/total)  
+    try:
+        currentyear = str(datetime.now().year-1) + "-" + str(datetime.now().year)                
+        for i in range(12):
+            feesp = feesrecord.objects.filter(school_id=schoolid,std=i+1,year=currentyear).aggregate(Sum('paidfees'))['paidfees__sum']
+            total = int(gettotalfees(std = i+1,Schoolid = schoolid)) * len(Student_detail.objects.filter(school_id=schoolid,std=i+1))        
+            if feesp is None:
+                feesp = 0
+            if not total:
+                total = 1
+            t.append((feesp*100)/total)  
+    except:
+        return [0 for i in range(12)]    
     return t
 
 def getfeesper2(schoolid):
-    t = []    
-    nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1)     
-    for i in range(12):
-        feesp = feesrecord.objects.filter(school_id=schoolid,std=i+1,year=nextyear).aggregate(Sum('paidfees'))['paidfees__sum']
-        total = int(gettotalfees(std = i+1,Schoolid = schoolid)) * len(Student_detail.objects.filter(school_id=schoolid,std=i+1))        
-        if feesp is None:
-            feesp = 0
-        if not total:
-            total = 1
-        t.append((feesp*100)/total)  
+    t = []  
+    try:  
+        nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1)     
+        for i in range(12):
+            feesp = feesrecord.objects.filter(school_id=schoolid,std=i+1,year=nextyear).aggregate(Sum('paidfees'))['paidfees__sum']
+            total = int(gettotalfees(std = i+1,Schoolid = schoolid)) * len(Student_detail.objects.filter(school_id=schoolid,std=i+1))        
+            if feesp is None:
+                feesp = 0
+            if not total:
+                total = 1
+            t.append((feesp*100)/total)  
+    except:
+        return [0 for i in range(12)]    
     return t
 
 @csrf_exempt
@@ -686,22 +728,24 @@ def changeadminpwd(request):
     return HttpResponse(json.dumps({"msg":"Successfully changed password"}))
 
 def getattstat(schoolid):
-    e = attendance_student.objects.filter(school_id=schoolid) 
-    
-    total = len(Student_detail.objects.filter(school_id=schoolid)) * 23
-    
     data = []
-    
-    m='0'
-    
-    for i in range(12):
-        if i+1 not in [10,11,12]:
-            m = str('-'+'0'+str(i+1)+'-')
-            
-            data.append((len(attendance_student.objects.filter(school_id=7,date__icontains = m,present=True))*100)/total)
-        else:
-            m = str('-'+str(i+1)+'-')
-            data.append((len(attendance_student.objects.filter(school_id=7,date__icontains = m,present=True))*100)/total)    
+    try:
+        e = attendance_student.objects.filter(school_id=schoolid) 
+        
+        total = len(Student_detail.objects.filter(school_id=schoolid)) * 23
+        
+        m='0'
+        
+        for i in range(12):
+            if i+1 not in [10,11,12]:
+                m = str('-'+'0'+str(i+1)+'-')
+                
+                data.append((len(attendance_student.objects.filter(school_id=7,date__icontains = m,present=True))*100)/total)
+            else:
+                m = str('-'+str(i+1)+'-')
+                data.append((len(attendance_student.objects.filter(school_id=7,date__icontains = m,present=True))*100)/total)    
+    except:
+        return [0 for i in range(12)]    
     return data    
 
 @csrf_exempt
