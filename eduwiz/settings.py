@@ -7,8 +7,8 @@ ALLOWED_HOSTS = ['192.168.43.121', 'localhost']
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = "serviceeduwiz@gmail.com"
-EMAIL_HOST_PASSWORD = "Vrushank@123"
+EMAIL_HOST_USER = "" # write email ID here
+EMAIL_HOST_PASSWORD = "" # Write Password here
 EMAIL_PORT = 587
 
 INSTALLED_APPS = [
