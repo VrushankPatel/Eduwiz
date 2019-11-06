@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404,HttpResponseRedirect,JsonResponse
 from arc4 import ARC4
 from django.views.decorators.csrf import csrf_exempt
-from home.models import *
+from Home.models import *
 from django.core.mail import send_mail,EmailMessage
 from django.conf import settings
 from django.db.models import Avg, Max, Min, Sum
@@ -43,17 +43,17 @@ class MobileThread(threading.Thread):
 def send_sms(mobile,sms_content):
     MobileThread(mobile,sms_content).start()
 
-def home(request):    
-    return render(request, 'home/static/templates/Home/index.html')
+def Home(request):    
+    return render(request, 'Home/static/templates/Home/index.html')
 
 
 def features(request):
-    return render(request, "home/static/templates/Home/features.html")
+    return render(request, "Home/static/templates/Home/features.html")
 
 def signup(request):
     if request.method == "GET":
         # /Signup/signup.html
-        return render(request, "home/static/templates/Signup/Signup.html", {"checker": "signup"})
+        return render(request, "Home/static/templates/Signup/Signup.html", {"checker": "signup"})
     else:
         if request.POST['checker'] == "signup" and not checkifexists(request.POST['email']) and not checkifexistsmob(request.POST["phone"]):            
             print("debug : ",checkifexistsmob(request.POST["phone"]))
@@ -65,14 +65,14 @@ def signup(request):
             send_sms(str("91"+request.POST["phone"]),str("OTP (One time password for your eduwiz account sign up is %s" % a2))
             a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
             a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
-            return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})          
+            return render(request, "Home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})          
         elif request.POST['checker'] == "verify" and not checkifexists(request.POST['email']):
             if request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest() and request.POST["privatedata2"] == hashlib.md5(("%s" % request.POST["OTPmobile"]).encode()).hexdigest():
-                return render(request, "home/static/templates/Signup/password.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "checker": "password"})
+                return render(request, "Home/static/templates/Signup/password.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "checker": "password"})
             else:
-                return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": request.POST["privatedata1"], "privatedata2": request.POST["privatedata2"], "checker": "verify", "OTP1": not (request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest()), "OTP2": not (request.POST["privatedata2"] == hashlib.md5(("%s" % request.POST["OTPmobile"]).encode()).hexdigest()), "firstotp": request.POST["OTPemail"], "secondotp": request.POST["OTPmobile"], "msg": "Invalid OTP", "msg2": "Invalid OTP", "msgcolor": "red"})
+                return render(request, "Home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": request.POST["privatedata1"], "privatedata2": request.POST["privatedata2"], "checker": "verify", "OTP1": not (request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest()), "OTP2": not (request.POST["privatedata2"] == hashlib.md5(("%s" % request.POST["OTPmobile"]).encode()).hexdigest()), "firstotp": request.POST["OTPemail"], "secondotp": request.POST["OTPmobile"], "msg": "Invalid OTP", "msg2": "Invalid OTP", "msgcolor": "red"})
         elif request.POST['checker'] == "password" and not checkifexists(request.POST['email']):
-            return render(request, "home/static/templates/Signup/Schooldetails.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "adminmobile": request.POST["phone"], "checker": "schooldetails", "privatedata1" : rc4(request.POST["pwd"], request.POST["email"]) })
+            return render(request, "Home/static/templates/Signup/Schooldetails.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "adminmobile": request.POST["phone"], "checker": "schooldetails", "privatedata1" : rc4(request.POST["pwd"], request.POST["email"]) })
         elif request.POST['checker'] == "resend" and not checkifexists(request.POST['email']):
             a1 = random.randrange(100000, 1000000)
             a2 = random.randrange(100000, 1000000)            
@@ -82,21 +82,21 @@ def signup(request):
             send_sms(str("91"+request.POST["phone"]),str("OTP (One time password for your eduwiz account sign up is %s" % a2))
             a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
             a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
-            return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})
+            return render(request, "Home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})
         elif request.POST['checker'] == "schooldetails" and not checkifexists(request.POST['email']):
-            return render(request, "home/static/templates/Signup/createacc.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthdate"], "gender": request.POST["gender"], "email": request.POST["email"], "adminmobile": request.POST["adminmobile"] , "schoolname": request.POST["schoolname"], "schooladdress": request.POST["schooladdress"], "schoolmobile": request.POST["schoolmobile"], "privatedata1": request.POST["privatedata1"], "checker": "createacc"})
+            return render(request, "Home/static/templates/Signup/createacc.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthdate"], "gender": request.POST["gender"], "email": request.POST["email"], "adminmobile": request.POST["adminmobile"] , "schoolname": request.POST["schoolname"], "schooladdress": request.POST["schooladdress"], "schoolmobile": request.POST["schoolmobile"], "privatedata1": request.POST["privatedata1"], "checker": "createacc"})
         elif request.POST['checker'] == "createacc" and not checkifexists(request.POST['email']):
             data = {"admin_name":str(request.POST["first_name"] + " " + request.POST["last_name"]),"admin_dob":str(request.POST["birthdate"]),"admin_gender":str(request.POST["gender"]),"admin_email":str(request.POST["email"]),"admin_mobile":int(request.POST["adminmobile"]),"admin_pwd":str(request.POST["privatedata1"]),"school_name":str(request.POST["schoolname"]),"school_address":str(request.POST["schooladdress"]),"school_mobile":int(request.POST["schoolmobile"]),"clerk_name":str(request.POST["clerkname"]),"clerk_id":str(request.POST["clerkid"]),"clerk_pwd":str(rc4(request.POST["clerkpwd"],request.POST["clerkid"])),"dashboard_id":str(request.POST["dashboardid"]),"dashboard_pwd":str(rc4(request.POST["dashboardpwd"],request.POST["dashboardid"]))}
 
             admindata = Administrator(admin_name=data["admin_name"], admin_dob=data["admin_dob"],admin_gender=data["admin_gender"],admin_mobile=data["admin_mobile"],admin_email=data["admin_email"],admin_pwd=data["admin_pwd"],school_name=data["school_name"],school_address=data["school_address"],school_mobile=data["school_mobile"],clerk_name=data["clerk_name"],clerk_id=data["clerk_id"],clerk_pwd=data["clerk_pwd"],dashboard_id=data["dashboard_id"],dashboard_pwd=data["dashboard_pwd"])
 
             admindata.save()
-            return render(request,"home/static/templates/success.html",{"id":admindata.id})
-            # return render(request,"home/static/templates/Signup/temp.html",data)
+            return render(request,"Home/static/templates/success.html",{"id":admindata.id})
+            # return render(request,"Home/static/templates/Signup/temp.html",data)
         elif checkifexists(request.POST['email']):            
-            return render(request,"home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"There is already an account with this Email. Please use another email","type":"error"})
+            return render(request,"Home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"There is already an account with this Email. Please use another email","type":"error"})
         elif checkifexistsmob(request.POST['phone']):            
-            return render(request,"home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"There is already an account with this Mobile number. Please use another Mobile","type":"error"})
+            return render(request,"Home/static/templates/swal.html",{"msg1":"OOPS...","msg2":"There is already an account with this Mobile number. Please use another Mobile","type":"error"})
         else:
             return HttpResponse("Unknown error occured")
 
@@ -107,7 +107,7 @@ def signin(request):
             if request.COOKIES['idloggedin']:        
                 return HttpResponseRedirect('/signin/dashboard')            
         except:
-            return render(request,"home/static/templates/signin/signin.html")    
+            return render(request,"Home/static/templates/signin/signin.html")    
     else:
         try:            
             a=Administrator.objects.get(id=request.POST["id"])
@@ -144,8 +144,8 @@ def signin(request):
                         return response            
                 return HttpResponse("Student does not exists")
         except Exception as e:            
-            return render(request,"home/static/templates/signin/signin.html",{"alert":"There is no account with this ID"})            
-        return render(request,"home/static/templates/signin/signin.html",{"alert":"There is no account with this ID"})    
+            return render(request,"Home/static/templates/signin/signin.html",{"alert":"There is no account with this ID"})            
+        return render(request,"Home/static/templates/signin/signin.html",{"alert":"There is no account with this ID"})    
 
 def signinwithparam(request,passparam):     
     try:
@@ -162,25 +162,25 @@ def signinwithparam(request,passparam):
                     sfp2 = getfeesper2(request.COOKIES['idloggedin'])                                       
                     currentyear = str(datetime.now().year-1) + "-" + str(datetime.now().year)                
                     nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1) 
-                    return render(request,"home/static/templates/in-Administrator/examples/dashboard.html",{"uname":uname.admin_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11],"att1":attstat[0],"att2":attstat[1],"att3":attstat[2],"att4":attstat[3],"att5":attstat[4],"att6":attstat[5],"att7":attstat[6],"att8":attstat[7],"att9":attstat[8],"att10":attstat[9],"att11":attstat[10],"att12":attstat[11]})
+                    return render(request,"Home/static/templates/in-Administrator/examples/dashboard.html",{"uname":uname.admin_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11],"att1":attstat[0],"att2":attstat[1],"att3":attstat[2],"att4":attstat[3],"att5":attstat[4],"att6":attstat[5],"att7":attstat[6],"att8":attstat[7],"att9":attstat[8],"att10":attstat[9],"att11":attstat[10],"att12":attstat[11]})
                 elif passparam == "addremove":
-                    return render(request,"home/static/templates/in-Administrator/examples/addremove.html",{"uname":uname.admin_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12))})
+                    return render(request,"Home/static/templates/in-Administrator/examples/addremove.html",{"uname":uname.admin_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12))})
                     #return HttpResponse(request.COOKIES['idloggedin'])
                 elif passparam == "Attendancemanager":
-                    return render(request,"home/static/templates/in-Administrator/examples/Attendancemanager.html",{"uname":uname.admin_name})
+                    return render(request,"Home/static/templates/in-Administrator/examples/Attendancemanager.html",{"uname":uname.admin_name})
                 elif passparam == "changecredentials":
-                    return render(request,"home/static/templates/in-Administrator/examples/changecredentials.html",{"uname":uname.admin_name})
+                    return render(request,"Home/static/templates/in-Administrator/examples/changecredentials.html",{"uname":uname.admin_name})
                 elif passparam == "Feescoll":
                     schoolid=int(request.COOKIES['idloggedin'][0])
                     try:
                         feesset = totalfees.objects.get(school_id=schoolid)
-                        return render(request,"home/static/templates/in-Administrator/examples/Feescoll.html",{"uname":uname.admin_name,"totalfees":"hidden","insertfees":""})                    
+                        return render(request,"Home/static/templates/in-Administrator/examples/Feescoll.html",{"uname":uname.admin_name,"totalfees":"hidden","insertfees":""})                    
                     except:
-                        return render(request,"home/static/templates/in-Administrator/examples/Feescoll.html",{"uname":uname.admin_name,"totalfees":"","insertfees":"hidden"})  
+                        return render(request,"Home/static/templates/in-Administrator/examples/Feescoll.html",{"uname":uname.admin_name,"totalfees":"","insertfees":"hidden"})  
                 elif passparam == "viewdata":
-                    return render(request,"home/static/templates/in-Administrator/examples/viewdata.html",{"uname":uname.admin_name})        
+                    return render(request,"Home/static/templates/in-Administrator/examples/viewdata.html",{"uname":uname.admin_name})        
                 elif passparam == "declaration":
-                    return render(request,"home/static/templates/in-Administrator/examples/declaration.html",{"uname":uname.admin_name})
+                    return render(request,"Home/static/templates/in-Administrator/examples/declaration.html",{"uname":uname.admin_name})
             elif request.COOKIES['userloggedin'] == "Clerk":
                 uname = Administrator.objects.get(id = request.COOKIES['idloggedin'])
                 studentss = Student_detail.objects.filter(school_id=request.COOKIES['idloggedin'])
@@ -191,18 +191,18 @@ def signinwithparam(request,passparam):
                     sfp2 = getfeesper2(request.COOKIES['idloggedin'])                                       
                     currentyear = str(datetime.now  ().year-1) + "-" + str(datetime.now().year)                
                     nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1)                     
-                    return render(request,"home/static/templates/in-Clerk/examples/dashboard.html",{"uname":uname.clerk_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11]})                
+                    return render(request,"Home/static/templates/in-Clerk/examples/dashboard.html",{"uname":uname.clerk_name,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11]})                
                 elif passparam == "Feescoll":
                     schoolid=int(request.COOKIES['idloggedin'][0])
                     try:
                         feesset = totalfees.objects.get(school_id=schoolid)
-                        return render(request,"home/static/templates/in-Clerk/examples/Feescoll.html",{"uname":uname.clerk_name,"totalfees":"hidden","insertfees":""})                    
+                        return render(request,"Home/static/templates/in-Clerk/examples/Feescoll.html",{"uname":uname.clerk_name,"totalfees":"hidden","insertfees":""})                    
                     except:
-                        return render(request,"home/static/templates/in-Clerk/examples/Feescoll.html",{"uname":uname.clerk_name,"totalfees":"","insertfees":"hidden"})  
+                        return render(request,"Home/static/templates/in-Clerk/examples/Feescoll.html",{"uname":uname.clerk_name,"totalfees":"","insertfees":"hidden"})  
                 elif passparam == "viewdata":
-                    return render(request,"home/static/templates/in-Clerk/examples/viewdata.html",{"uname":uname.clerk_name})        
+                    return render(request,"Home/static/templates/in-Clerk/examples/viewdata.html",{"uname":uname.clerk_name})        
                 elif passparam == "declaration":
-                    return render(request,"home/static/templates/in-Clerk/examples/declaration.html",{"uname":uname.clerk_name})
+                    return render(request,"Home/static/templates/in-Clerk/examples/declaration.html",{"uname":uname.clerk_name})
             elif request.COOKIES['userloggedin'] == "Faculty":
                 uname = request.COOKIES['facultyname']
                 studentss = Student_detail.objects.filter(school_id=request.COOKIES['idloggedin'])
@@ -214,13 +214,13 @@ def signinwithparam(request,passparam):
                     sfp2 = getfeesper2(request.COOKIES['idloggedin'])                   
                     currentyear = str(datetime.now().year-1) + "-" + str(datetime.now().year)                
                     nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1) 
-                    return render(request,"home/static/templates/in-Faculty/examples/dashboard.html",{"uname":uname,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11],"att1":attstat[0],"att2":attstat[1],"att3":attstat[2],"att4":attstat[3],"att5":attstat[4],"att6":attstat[5],"att7":attstat[6],"att8":attstat[7],"att9":attstat[8],"att10":attstat[9],"att11":attstat[10],"att12":attstat[11]})              
+                    return render(request,"Home/static/templates/in-Faculty/examples/dashboard.html",{"uname":uname,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11],"att1":attstat[0],"att2":attstat[1],"att3":attstat[2],"att4":attstat[3],"att5":attstat[4],"att6":attstat[5],"att7":attstat[6],"att8":attstat[7],"att9":attstat[8],"att10":attstat[9],"att11":attstat[10],"att12":attstat[11]})              
                 elif passparam == "Attendancemanager":                    
-                    return render(request,"home/static/templates/in-Faculty/examples/Attendancemanager.html",{"uname":uname})
+                    return render(request,"Home/static/templates/in-Faculty/examples/Attendancemanager.html",{"uname":uname})
                 elif passparam == "viewdata":
-                    return render(request,"home/static/templates/in-Faculty/examples/viewdata.html",{"uname":uname})        
+                    return render(request,"Home/static/templates/in-Faculty/examples/viewdata.html",{"uname":uname})        
                 elif passparam == "declaration":
-                    return render(request,"home/static/templates/in-Faculty/examples/declaration.html",{"uname":uname})   
+                    return render(request,"Home/static/templates/in-Faculty/examples/declaration.html",{"uname":uname})   
             elif request.COOKIES['userloggedin'] == "Student":
                 uname = request.COOKIES['facultyname']
                 studentss = Student_detail.objects.filter(school_id=request.COOKIES['idloggedin'])
@@ -232,15 +232,15 @@ def signinwithparam(request,passparam):
                     sfp2 = getfeesper2(request.COOKIES['idloggedin'])                   
                     currentyear = str(datetime.now().year-1) + "-" + str(datetime.now().year)                
                     nextyear = str(datetime.now().year) + "-" + str(datetime.now().year+1) 
-                    return render(request,"home/static/templates/in-Faculty/examples/dashboard.html",{"uname":uname,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11],"att1":attstat[0],"att2":attstat[1],"att3":attstat[2],"att4":attstat[3],"att5":attstat[4],"att6":attstat[5],"att7":attstat[6],"att8":attstat[7],"att9":attstat[8],"att10":attstat[9],"att11":attstat[10],"att12":attstat[11]})              
+                    return render(request,"Home/static/templates/in-Faculty/examples/dashboard.html",{"uname":uname,"st1":x(y(std=1)),"st2":x(y(std=2)),"st3":x(y(std=3)),"st4":x(y(std=4)),"st5":x(y(std=5)),"st6":x(y(std=6)),"st7":x(y(std=7)),"st8":x(y(std=8)),"st9":x(y(std=9)),"st10":x(y(std=10)),"st11":x(y(std=11)),"st12":x(y(std=12)),"sfp1":sfp[0],"sfp2":sfp[1],"sfp3":sfp[2],"sfp4":sfp[3],"sfp5":sfp[4],"sfp6":sfp[5],"sfp7":sfp[6],"sfp8":sfp[7],"sfp9":sfp[8],"sfp10":sfp[9],"sfp11":sfp[10],"sfp12":sfp[11],"cy":currentyear,"ny":nextyear,"sfpn1":sfp2[0],"sfpn2":sfp2[1],"sfpn3":sfp2[2],"sfpn4":sfp2[3],"sfpn5":sfp2[4],"sfpn6":sfp2[5],"sfpn7":sfp2[6],"sfpn8":sfp2[7],"sfpn9":sfp2[8],"sfpn10":sfp2[9],"sfpn11":sfp2[10],"sfpn12":sfp2[11],"att1":attstat[0],"att2":attstat[1],"att3":attstat[2],"att4":attstat[3],"att5":attstat[4],"att6":attstat[5],"att7":attstat[6],"att8":attstat[7],"att9":attstat[8],"att10":attstat[9],"att11":attstat[10],"att12":attstat[11]})              
                 elif passparam == "Attendancemanager":                    
-                    return render(request,"home/static/templates/in-Faculty/examples/Attendancemanager.html",{"uname":uname})
+                    return render(request,"Home/static/templates/in-Faculty/examples/Attendancemanager.html",{"uname":uname})
                 elif passparam == "viewdata":
-                    return render(request,"home/static/templates/in-Faculty/examples/viewdata.html",{"uname":uname})        
+                    return render(request,"Home/static/templates/in-Faculty/examples/viewdata.html",{"uname":uname})        
                 elif passparam == "declaration":
-                    return render(request,"home/static/templates/in-Faculty/examples/declaration.html",{"uname":uname})            
+                    return render(request,"Home/static/templates/in-Faculty/examples/declaration.html",{"uname":uname})            
         else:
-            return render(request,"home/static/error/error.html")
+            return render(request,"Home/static/error/error.html")
     except Exception as e:
         print(e)
         response = HttpResponseRedirect('/signin')
@@ -765,4 +765,4 @@ def removedeclaration(request,passparam):
     return HttpResponse(json.dumps({"msg":"Announcement successfully deleted"}))
 
 def about(request):
-    return render(request, 'home/static/templates/horizontal flipping information card/Fliping info card photo.html')       
+    return render(request, 'Home/static/templates/horizontal flipping information card/Fliping info card photo.html')       
