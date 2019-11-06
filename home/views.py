@@ -44,11 +44,11 @@ def send_sms(mobile,sms_content):
     MobileThread(mobile,sms_content).start()
 
 def home(request):    
-    return render(request, 'home/static/templates/home/index.html')
+    return render(request, 'home/static/templates/Home/index.html')
 
 
 def features(request):
-    return render(request, "home/static/templates/home/features.html")
+    return render(request, "home/static/templates/Home/features.html")
 
 def signup(request):
     if request.method == "GET":
