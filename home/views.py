@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404,HttpResponseRedirect,JsonResponse
 from arc4 import ARC4
 from django.views.decorators.csrf import csrf_exempt
-from Home.models import *
+from home.models import *
 from django.core.mail import send_mail,EmailMessage
 from django.conf import settings
 from django.db.models import Avg, Max, Min, Sum
@@ -43,7 +43,7 @@ class MobileThread(threading.Thread):
 def send_sms(mobile,sms_content):
     MobileThread(mobile,sms_content).start()
 
-def Home(request):    
+def home(request):    
     return render(request, 'Home/static/templates/Home/index.html')
 
 
