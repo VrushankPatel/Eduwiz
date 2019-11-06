@@ -24,7 +24,7 @@ def features(request):
 def signup(request):
     if request.method == "GET":
         # /Signup/signup.html
-        return render(request, "home/static/templates/Signup/Signup.html", {"checker": "signup"})
+        return render(request, "home/static/templates/Signup/signup.html", {"checker": "signup"})
     else:
         if request.POST['checker'] == "signup" and not checkifexists(request.POST['email']):            
             a1 = random.randrange(100000, 1000000)
