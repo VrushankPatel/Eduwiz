@@ -3,7 +3,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'q2l68t*ua$fbgb*7k(-3oi*+5j-1w*ivcn8&+99%4)h&9j2tq+'
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.43.121', 'localhost']
+ALLOWED_HOSTS = ['3.17.205.124', 'localhost']
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
