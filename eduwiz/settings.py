@@ -1,4 +1,4 @@
-import oss
+import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'q2l68t*ua$fbgb*7k(-3oi*+5j-1w*ivcn8&+99%4)h&9j2tq+'
 DEBUG = True
