@@ -19,24 +19,24 @@
 <body>
     <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
         <div class="wrapper wrapper--w680">
-            <div class="card card-4">            
+            <div class="card card-4">
                 <div class="card-body">
                     <h2 class="title">Administrator Signup</h2>
                     <form method="POST" action="/signup/"> {% csrf_token %}
-                        <input type="text" id="checker" name="checker" value="{{checker}}" hidden>
+                        <input type="text" name="checker" value="{{checker}}" hidden>
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">first name</label>
                                     <input class="input--style-4" type="text" name="first_name" autocomplete="on"
-                                        id="first_name" required>
+                                        required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">last name</label>
                                     <input class="input--style-4" type="text" name="last_name" autocomplete="on"
-                                        id="last_name" required>
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                                     <label class="label">Birthday</label>
                                     <div class="input-group-icon">
                                         <input class="input--style-4 js-datepicker" type="text" name="birthday"
-                                            id="birthday" autocomplete="on" required>
+                                            autocomplete="on" required>
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -56,12 +56,11 @@
                                     <label class="label">Gender</label>
                                     <div class="p-t-10">
                                         <label class="radio-container m-r-45">Male
-                                            <input type="radio" value="Male" checked="checked" name="gender"
-                                                id="gender">
+                                            <input type="radio" value="Male" checked="checked" name="gender">
                                             <span class="checkmark"></span>
                                         </label>
                                         <label class="radio-container">Female
-                                            <input type="radio" value="Female" name="gender" id="gender">
+                                            <input type="radio" value="Female" name="gender">
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
@@ -72,24 +71,22 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Email</label>
-                                    <input class="input--style-4" type="email" name="email" autocomplete="on" id="email"
-                                        required>
+                                    <input class="input--style-4" type="email" name="email" autocomplete="on" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number <span class="lblsp">(without +91)</span></label>
                                     <input class="input--style-4" type="text" pattern="[6789][0-9]{9}" name="phone"
-                                        title="Please enter a valid mobile number" id="phone" autocomplete="on"
-                                        required>
+                                        title="Please enter a valid mobile number" autocomplete="on" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-t-15">                                                        
+                        <div class="p-t-15">
+                            <a class="txt2" style = "float:left" href = "\"><- Back</a>
                             <button class="btn btn--radius-2 btn--blue" style="float:right" type="submit">Next</button>
-                            </form>
-                            <button class="btn btn--radius-2 btn--blue" onclick='window.history.back' style="float:left">Back</button>
-                        </div>                                            
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -104,6 +101,7 @@
 
     <!-- Main JS-->
     <script src="{% static '/templates/Signup/js/global.js' %}"></script>
+
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
 </html>
