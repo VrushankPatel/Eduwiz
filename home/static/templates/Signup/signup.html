@@ -19,7 +19,7 @@
 <body>
     <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
         <div class="wrapper wrapper--w680">
-            <div class="card card-4">
+            <div class="card card-4">            
                 <div class="card-body">
                     <h2 class="title">Administrator Signup</h2>
                     <form method="POST" action="/signup/"> {% csrf_token %}
@@ -84,6 +84,9 @@
                                         required>
                                 </div>
                             </div>
+                        </div>
+                        <div class="p-t-15">
+                            <button class="btn btn--radius-2 btn--gray" style="float:left" type="submit">Back</button>
                         </div>
                         <div class="p-t-15">
                             <button class="btn btn--radius-2 btn--blue" style="float:right" type="submit">Next</button>
