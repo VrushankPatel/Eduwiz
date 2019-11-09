@@ -1,7 +1,6 @@
 from django.db import models
 
 # Create your models here.
-# aa me haal j add kryu jo
 
 class Administrator(models.Model):
     admin_name = models.CharField(max_length=101)
