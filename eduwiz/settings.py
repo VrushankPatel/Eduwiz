@@ -7,7 +7,7 @@ ALLOWED_HOSTS = ['3.17.205.124', 'localhost']
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = "" # write email ID here
+EMAIL_HOST_USER = "" # write Mail ID here
 EMAIL_HOST_PASSWORD = "" # Write Password here
 EMAIL_PORT = 587
 
