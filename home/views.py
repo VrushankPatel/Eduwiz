@@ -256,8 +256,8 @@ def rc4(encryptiontext, key):
 
 def sendmail(msg, destinationaddress):
     try:
-        username = 'ServiceEduwiz@gmail.com'
-        password = 'eduwiz@123'
+        username = ''
+        password = ''
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
         server.login(username, password)
