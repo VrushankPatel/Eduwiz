@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    Admin Dashboard
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+    name='viewport' />
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link href="{% static '/templates/in-Administrator/assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/templates/in-Administrator/assets/css/now-ui-dashboard.css' %}" rel="stylesheet" />
+  <link href="{% static '/templates/in-Administrator/assets/demo/demo.css' %}" rel="stylesheet" />
+</head>
+
+<body class="">
+  <div class="wrapper ">
+    <div class="sidebar" data-color="orange">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
+    -->
+      <div class="logo">
+        <a href="" class="simple-text logo-mini">
+
+        </a>
+        <a href="" class="simple-text"
+          style="font-size: 25px;font-family: 'Montserrat', sans-serif;">
+          Eduwiz
+        </a>
+      </div>
+      <div class="sidebar-wrapper" id="sidebar-wrapper">
+        <ul class="nav">
+          <li>
+            <a href="/signin/dashboard">
+              <i class="now-ui-icons design_app"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/addremove">
+              <i class="now-ui-icons users_single-02"></i>
+              <p>Add / remove</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/changecredentials">
+              <i class="now-ui-icons ui-2_settings-90"></i>
+              <p>Change Credentials</p>
+            </a>
+          </li>
+          <li class="active">
+            <a href="/signin/declaration">
+              <i class="now-ui-icons ui-1_bell-53"></i>
+              <p>Declaration</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/viewdata">
+              <i class="now-ui-icons education_paper"></i>
+              <p>View Data</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/Feescoll">
+              <i class="now-ui-icons design_bullet-list-67"></i>
+              <p>Fees collection</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/Attendancemanager">
+              <i class="now-ui-icons files_single-copy-04"></i>
+              <p>Attendance manager</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel" id="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <div class="navbar-toggle">
+              <button type="button" class="navbar-toggler">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </button>
+            </div>
+            <a class="navbar-brand">Declaration</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+            aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <ul class="navbar-nav">
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="now-ui-icons users_single-02"> </i>Administrator
+                  <p>
+                    <span class="d-lg-none d-md-block"></span>
+                  </p>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" style="pointer-events: none;color:Black;" href="http://www.google.com">Hello
+                    {{uname}}</a>
+                  <a class="dropdown-item" data-toggle="modal" data-target="#mdl">Change Admin Password</a>
+                  <a class="dropdown-item" href="/logout">Log out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+      <!--modal change Password-->
+      <div class="modal fade" id="mdl">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Change admin Password<p style="font-size:15px;color:gray">
+                Enter
+                new password for Administrator account</p>
+            </h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="adminpwdchange">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Clerk_name">Enter new password :</label>
+                  <input class="form-control" style="background-color: white;color:black" type="password" name=""
+                    id="pwd" placeholder="New password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                    onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Password must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters' : ''); if(this.checkValidity()) form.pwd2.pattern = this.value;"
+                    required>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Clerk_id">Confirm password :</label>
+                  <input class="form-control" style="background-color: white;color:black" type="password" name=""
+                    id="pwd2" placeholder="Confirm password"
+                    onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Passwords doesn't match : '');"
+                    title="Passwords doesnt match" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="Submit" class="btn btn-primary">Submit</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--modal change Password end-->
+      <div class="panel-header panel-header-sm">
+      </div>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="places-buttons">
+              <div class="row">
+                <div class="col-md-6 ml-auto mr-auto text-center">
+                  <h4 class="card-title">
+                    Declaration
+                    <p class="category">Declare your announcements here</p>
+                  </h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 ml-auto mr-auto">
+                  <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl1"
+                        style="height: 100px;font-size: 15px">Declare holidays</button>
+                    </div>
+                    <div class="col-md-4">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl2"
+                        style="height: 100px;font-size: 15px">Declare Result date </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 ml-auto mr-auto">
+                  <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl3"
+                        style="height: 100px;font-size: 15px">Declare Event information</button>
+                    </div>
+                    <div class="col-md-4">
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#mdl5"
+                        style="height: 100px;font-size: 15px">Cancel or remove Declaration</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="mdl1">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Declare holidays</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="newstudentform">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-6">
+                  <label for="#DOB">Date of holiday : </label>
+                  <input type="date" onchange="checkdate()" class="form-control" name="DOB" id="DOB" required>
+                </div>
+                <div class="col-6">
+                  <label class="label">Announced on</label>
+                  <input class="form-control" type="text" id="declaredon" readonly>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Message">Message</label>
+                  <textarea rows="2" cols="40" name="address" class="form-control" id="Message" value="Mike"
+                    placeholder="Message" required></textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Next >">
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal fade" id="mdl2">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title">Declare Result date</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="newstudentform2">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-6">
+                  <label for="#DOB2">Date of Result declaration : </label>
+                  <input type="date" onchange="checkdate2()" class="form-control" name="DOB2" id="DOB2" required>
+                </div>
+                <div class="col-6">
+                  <label class="label">Announced on</label>
+                  <input class="form-control" type="text" id="declaredon2" readonly>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Message">Message</label>
+                  <textarea rows="2" cols="40" name="address" class="form-control" id="Message2" value="Mike"
+                    placeholder="Message" required></textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Next >">
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal fade" id="mdl3">
+        <div class="modal-content modal-dialog">
+          <div class="modal-header">
+            <h5 class="modal-title">Declare event info</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="newstudentform3">
+            <div class="modal-body">
+              <div class="input-group">
+                <div class="col-6">
+                  <label for="#DOB3">Date of Result declaration : </label>
+                  <input type="date" onchange="checkdate3()" class="form-control" name="DOB3" id="DOB3" required>
+                </div>
+                <div class="col-6">
+                  <label class="label">Announced on</label>
+                  <input class="form-control" type="text" id="declaredon3" readonly>
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="col-12">
+                  <label for="#Message3">Message</label>
+                  <textarea rows="2" cols="40" name="address" class="form-control" id="Message3" value="Mike"
+                    placeholder="Message" required></textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Next >">
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal fade" id="mdl5">
+        <div class="modal-content modal-dialog" style="height:100%">
+          <div class="modal-header">
+            <h5 class="modal-title">Cancel announcements/declarations</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="newstudentform3">
+            <div class="modal-body">
+              <div class="table-responsive">
+                <table class="table" onload="getdec()">
+                  <thead class="text-primary">
+                    <th style="width: 25%">
+                      Declared on date
+                    </th>
+                    <th style="width: 25%">
+                      Declared for date
+                    </th>
+                    <th>
+                      Message
+                    </th>
+                    <th>
+                      remove
+                    </th>
+                  </thead>
+                  <tbody id="facultytable">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="container-fluid">
+          <nav>
+            <ul>
+              <li>
+                <a href="http://www.vapsquare.tk">
+                  Blog
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="{% static '/templates/in-Administrator/assets/js/core/jquery.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/core/popper.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/core/bootstrap.min.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+  <script src=".."></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/plugins/chartjs.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/plugins/bootstrap-notify.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/js/now-ui-dashboard.min.js' %}"></script>
+  <script src="{% static '/templates/in-Administrator/assets/demo/demo.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      getdatass()
+    });
+    function getdatass() {
+      data1 = {
+        "usertype": "clerk",
+      };
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/getglobaldeclaration/',
+        data: data1,
+        success: function (result) {
+          let r = result.data
+          let total = result.total;
+          console.log(total)
+          var i = 1;
+          while (i <= total) {
+            $("#facultytable").append("<tr><td>" + r[i]["declaredon"] + "</td><td>" + r[i]["event_date"] + "</td><td>" + r[i]["message"] + "</td><td><button class=\"btn btn-danger\" type=\"button\" onclick=\"removedecfun('/remove/delete/remove" + r[i]["itsid"] + "')\" value = \"Delete\" >Delete</button>");
+            i++;
+          }
+        },
+
+        error: function (error) {
+          $.notify({
+            message: "Unable to retrive declarations and announcements. please try again later."
+          }, {
+              type: 'danger'
+            });
+        }
+      })
+    }
+    $('#mdl1').on('hidden.bs.modal', function () {
+      hideaction();
+    });
+    $('#mdl1').on('show.bs.modal', function () {
+      var today = new Date();
+      document.getElementById("declaredon").value = ('0' + today.getDate()).slice(-2) + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + today.getFullYear()
+    });
+    function checkdate() {
+      console.log("pol")
+      if (document.getElementById('DOB').value) {
+        msg = String(document.getElementById("DOB").value);
+        msg = msg[8] + msg[9] + '-' + msg[5] + msg[6] + '-' + msg[0] + msg[1] + msg[2] + msg[3];
+        document.getElementById('Message').innerHTML = "It is hereby informed to all of you that, there is holiday on " + msg + ". so the school remains closed on that day."
+      }
+      else {
+        document.getElementById('Message').innerHTML = ""
+      }
+    }
+    function hideaction() {
+      document.getElementById('newstudentform').reset();
+      document.getElementById('Message').innerHTML = ""
+    }
+
+    $('#mdl2').on('hidden.bs.modal', function () {
+      hideaction2();
+    });
+    $('#mdl2').on('show.bs.modal', function () {
+      var today = new Date();
+      document.getElementById("declaredon2").value = ('0' + today.getDate()).slice(-2) + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + today.getFullYear()
+    });
+    function checkdate2() {
+      console.log("vrushank")
+      if (document.getElementById('DOB2').value) {
+        msg = String(document.getElementById("DOB2").value);
+        msg = msg[8] + msg[9] + '-' + msg[5] + msg[6] + '-' + msg[0] + msg[1] + msg[2] + msg[3];
+        document.getElementById('Message2').innerHTML = "It is hereby informed to all of you that, the result will be declared on " + msg + " for students of standard ...."
+      }
+      else {
+        document.getElementById('Message2').innerHTML = ""
+      }
+    }
+    function hideaction2() {
+      document.getElementById('newstudentform2').reset();
+      document.getElementById('Message2').innerHTML = ""
+    }
+    //
+    $('#mdl3').on('hidden.bs.modal', function () {
+      hideaction3();
+    });
+    $('#mdl3').on('show.bs.modal', function () {
+      var today = new Date();
+      document.getElementById("declaredon3").value = ('0' + today.getDate()).slice(-2) + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + today.getFullYear()
+    });
+    function checkdate3() {
+      console.log("vrushank")
+      if (document.getElementById('DOB3').value) {
+        msg = String(document.getElementById("DOB3").value);
+        msg = msg[8] + msg[9] + '-' + msg[5] + msg[6] + '-' + msg[0] + msg[1] + msg[2] + msg[3];
+        document.getElementById('Message3').innerHTML = "It is hereby informed that, our school is going to organize ____ on " + msg + " , so the students who want to participate can register their information to respective standard/class coordinator/mentor/faculty."
+      }
+      else {
+        document.getElementById('Message3').innerHTML = ""
+      }
+    }
+    function hideaction3() {
+      document.getElementById('newstudentform3').reset();
+      document.getElementById('Message3').innerHTML = ""
+    }
+    $("#newstudentform").submit(function (event) {
+      event.preventDefault();
+      date = $("#DOB").val();
+      date = date[8] + date[9] + '-' + date[5] + date[6] + '-' + date[0] + date[1] + date[2] + date[3];
+      declaredate = $("#declaredon").val();
+      msg = $("#Message").html();
+      console.log(date + declaredate + msg)
+      declarationsubmit(date, declaredate, msg)
+    })
+    $("#newstudentform2").submit(function (event) {
+      event.preventDefault();
+      date = $("#DOB2").val();
+      date = date[8] + date[9] + '-' + date[5] + date[6] + '-' + date[0] + date[1] + date[2] + date[3];
+      declaredate = $("#declaredon2").val();
+      msg = $("#Message2").html();
+      console.log(date + declaredate + msg)
+      declarationsubmit(date, declaredate, msg)
+    })
+    $("#newstudentform3").submit(function (event) {
+      event.preventDefault();
+      date = $("#DOB3").val();
+      date = date[8] + date[9] + '-' + date[5] + date[6] + '-' + date[0] + date[1] + date[2] + date[3];
+      declaredate = $("#declaredon3").val();
+      msg = $("#Message3").html();
+      console.log(date + declaredate + msg)
+      declarationsubmit(date, declaredate, msg)
+    })
+    function declarationsubmit(date, declaredon, message) {
+      var data3 = {
+        "datee": date,
+        "declaredate": declaredon,
+        "message": message,
+      };
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/submitdeclarationtoall/',
+        data: data3,
+        success: function (result) {
+          $("#mdl1").modal("hide");
+          $("#mdl2").modal("hide");
+          $("#mdl3").modal("hide");
+          $.notify({
+            message: result.msg
+          }, {
+              type: 'success'
+            });
+        },
+        error: function (error) {
+          $.notify({
+            message: "Unable to declare."
+          }, {
+              type: 'danger'
+            });
+        }
+      })
+    }
+    $("#adminpwdchange").submit(function (event) {
+      event.preventDefault();
+      $("#mdl").modal("hide");
+      pwd = $("#pwd").val();
+      data3 = { "newpwd": pwd }
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: '/changeadminpwd/',
+        data: data3,
+        success: function (result) {
+          $.notify({
+            message: result.msg
+          }, {
+              type: 'success'
+            });
+        },
+        error: function (error) {
+          $.notify({
+            message: "Unable to change admin password. Please try again later."
+          }, {
+              type: 'danger'
+            });
+        }
+      })
+    })
+    function removedecfun(url2) {
+      $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: url2,
+        success: function (result) {
+          $.notify({
+            message: result.msg
+          }, {
+              type: 'success'
+            });
+          $("#facultytable").empty();
+          getdatass();
+        },
+        error: function (error) {
+          $.notify({
+            message: "Unable to change admin password. Please try again later."
+          }, {
+              type: 'danger'
+            });
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

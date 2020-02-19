@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    Clerk Account
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+    name='viewport' />
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link href="{% static '/templates/in-Administrator/assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/templates/in-Administrator/assets/css/now-ui-dashboard.css' %}" rel="stylesheet" />
+  <link href="{% static '/templates/in-Administrator/assets/demo/demo.css' %}" rel="stylesheet" />
+</head>
+
+<body class="">
+  <div class="wrapper ">
+    <div class="sidebar" data-color="orange">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
+    -->
+      <div class="logo">
+        <a href="" class="simple-text logo-mini">
+
+        </a>
+        <a href="" class="simple-text"
+          style="font-size: 25px;font-family: 'Montserrat', sans-serif;">
+          Eduwiz
+        </a>
+      </div>
+      <div class="sidebar-wrapper" id="sidebar-wrapper">
+        <ul class="nav">
+          <li>
+            <a href="/signin/dashboard">
+              <i class="now-ui-icons design_app"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>          
+          <li>
+            <a href="/signin/viewdata">
+              <i class="now-ui-icons education_paper"></i>
+              <p>View Data</p>
+            </a>
+          </li>
+          <li class="active">
+            <a href="/signin/Feescoll">
+              <i class="now-ui-icons design_bullet-list-67"></i>
+              <p>Fees collection</p>
+            </a>
+          </li>
+          <li>
+            <a href="/signin/declaration">
+              <i class="now-ui-icons files_single-copy-04"></i>
+              <p>Declaration</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel" id="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <div class="navbar-toggle">
+              <button type="button" class="navbar-toggler">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </button>
+            </div>
+            <a class="navbar-brand">Fees Collection</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+            aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <ul class="navbar-nav">
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="now-ui-icons users_single-02"> </i>Clerk
+                  <p>
+                    <span class="d-lg-none d-md-block"></span>
+                  </p>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" style="pointer-events: none;color:Black;" href="http://www.google.com">Hello
+                    {{uname}}</a>                  
+                  <a class="dropdown-item" href="/logout">Log out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+      <div class="panel-header panel-header-sm">
+      </div>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="places-buttons">
+              <div class="row">
+                <div class="col-md-6 ml-auto mr-auto text-center">
+                  <h4 class="card-title">
+                    Fees Collection
+                    <p class="category">Manage students fees collection here</p>
+                  </h4>
+                </div>
+              </div>
+              <div class="row" style="padding-bottom: 10%;padding-top: 2%;">
+                <div class="col-lg-12 ml-auto mr-auto">
+                  <div class="row">
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4" id="h1" {{totalfees}}>
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#setfees"
+                        style="height: 200px;font-size: 15px">Set total fees for all different standards</button>
+                    </div>
+                    <div class="col-md-4" id="h2" {{insertfees}}>
+                      <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#insertmodel"
+                        style="height: 200px;font-size: 15px">Show/Insert/Change Fees data</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 ml-auto mr-auto">
+                  <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <!--insert fee record-->
+                    <div class="modal fade" id="insertmodel">
+                      <div class="modal-content modal-dialog">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Insert fees record</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="input-group">
+                            <form id="OTT">
+                              <div class="input-group">
+                                <div class="col-5" id="stdhidden">
+                                  <label for="student_std">Std : </label>
+                                  <select id="student_std" name="standard" required onchange="getstudents()">
+                                    <option value="" selected disabled>Select std</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                  </select>
+                                </div>
+                                <div class="col-5">
+                                  <label for="">Year : </label>
+                                  <select id="student_year" onchange="getstudents()">
+                                    <option value="" selected disabled>Select Year</option>
+                                    <option value="" id="year1"></option>
+                                    <option value="" id="year2"></option>
+                                  </select>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                        <!--po-->
+                        <span id="datemsg" hidden>
+                          <h5 class="display-4 text-primary">Please choose year</h5>
+                        </span>
+                        <span id="datemsg2" hidden>
+                          <h5 class="display-4 text-primary">Please choose Standard</h5>
+                        </span>
+                        <span id="studenthidden" hidden>
+                          <div class="col-md-12">
+                            <div class="card">
+                              <div class="card-header">
+                                <h5 class="card-category">Insert fees record here</h5>
+                                <h4 class="card-title">Students List</h4>
+                              </div>
+                              <div class="card-body">
+                                <div class="table-responsive">
+                                  <table class="table">
+                                    <thead class="text-primary">
+                                      <th>
+                                        Enroll
+                                      </th>
+                                      <th>
+                                        Name
+                                      </th>
+                                      <th>
+                                        Father name
+                                      </th>
+                                      <th>
+                                        Fees [Paid / Total]
+                                      </th>
+                                    </thead>
+                                    <tbody id="studenttable">
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input class="btn btn-info" id="deletetrigger" value="Done" type="button"
+                              onclick="submitstudentfees()">
+                          </div>
+                      </div>
+                    </div>
+                    <!--end insert fee record-->
+                    <!--setfees-->
+                    <div class="modal fade" id="setfees">
+                      <div class="modal-content modal-dialog">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Set total Fees</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form id="totalfeesform">
+                            <div class="input-group">
+                              <div class="col-4">
+                                <label for="#Standard1">Standard 1 :</label>
+                                <input class="form-control" type="number" id="Standard1" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard2">Standard 2 :</label>
+                                <input class="form-control" type="number" id="Standard2" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard3">Standard 3 :</label>
+                                <input class="form-control" type="number" id="Standard3" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                            </div>
+                            <div class="input-group">
+                              <div class="col-4">
+                                <label for="#Standard4">Standard 4 :</label>
+                                <input class="form-control" type="number" id="Standard4" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard5">Standard 5 :</label>
+                                <input class="form-control" type="number" id="Standard5" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard6">Standard 6 :</label>
+                                <input class="form-control" type="number" id="Standard6" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                            </div>
+                            <div class="input-group">
+                              <div class="col-4">
+                                <label for="#Standard7">Standard 7 :</label>
+                                <input class="form-control" type="number" id="Standard7" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard8">Standard 8 :</label>
+                                <input class="form-control" type="number" id="Standard8" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard9">Standard 9 :</label>
+                                <input class="form-control" type="number" id="Standard9" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                            </div>
+                            <div class="input-group">
+                              <div class="col-4">
+                                <label for="#Standard10">Standard 10 :</label>
+                                <input class="form-control" type="number" id="Standard10" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard11">Standard 11 :</label>
+                                <input class="form-control" type="number" id="Standard11" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                              <div class="col-4">
+                                <label for="#Standard12">Standard 12 :</label>
+                                <input class="form-control" type="number" id="Standard12" placeholder="total fees"
+                                  style="width:110%" required>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <input class="btn btn-info" id="deletetrigger2" type="submit" value="set" onclick="">
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                      <!--end setfees-->
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="footer">
+          <div class="container-fluid">
+            <nav>
+              <ul>
+                <li>
+                  <a href="http://www.vapsquare.tk">
+                    Blog
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <!--   Core JS Files   -->
+    <script src="{% static '/templates/in-Administrator/assets/js/core/jquery.min.js' %}"></script>
+    <script src="{% static '/templates/in-Administrator/assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static '/templates/in-Administrator/assets/js/core/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+    <script src=".."></script>
+    <script src="{% static '/templates/in-Administrator/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static '/templates/in-Administrator/assets/js/plugins/chartjs.min.js' %}"></script>
+    <script src="{% static '/templates/in-Administrator/assets/js/plugins/bootstrap-notify.js' %}"></script>
+    <script src="{% static '/templates/in-Administrator/assets/js/now-ui-dashboard.min.js' %}"></script>
+    <script src="{% static '/templates/in-Administrator/assets/demo/demo.js' %}"></script>
+    <script>
+      var datag;
+      var datat;
+      $(document).ready(function () {
+        // Javascript method's body can be found in assets/js/demos.js
+        demo.initDashboardPageCharts();
+      });
+      $("#insertmodel").on('show.bs.modal', function () {
+        year = new Date().getFullYear()
+        $("#year1").html(year - 1 + "-" + year)
+        $("#year1").val(year - 1 + "-" + year)
+        $("#year2").html(year + "-" + (year + 1))
+        $("#year2").val(year + "-" + (year + 1))
+      })
+      $('#insertmodel').on('hide.bs.modal', function () {
+        document.getElementById("OTT").reset();
+        $("#studenthidden").prop("hidden", true);
+        $("#datemsg").prop("hidden", true)
+        $("#datemsg2").prop("hidden", true)
+      });
+      function checkfees(a) {
+
+      }
+      function getstudents() {
+        if (document.getElementById("student_year").value && document.getElementById("student_std").value) {
+          $("#studenttable").html("");
+          $("#datemsg").prop("hidden", true)
+          $("#datemsg2").prop("hidden", true)
+          $("#studenthidden").prop("hidden", false);
+          var data3 = {
+            "total": datat,
+            "payyear": document.getElementById('student_year').value,
+            "standard1": document.getElementById('student_std').value,
+          };
+          var i = 1;
+          data = datag;
+          while (i <= datat) {
+            data3[String(data[i]["Enroll"])] = $('#fac' + data[i]["Enroll"] + "id").is(":checked");
+            i++;
+          }
+          $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            data: data3,
+            url: '/getallstudent2/',
+            success: function (result) {
+              let r = result.data;
+              datag = result.data;
+              datat = result.total;
+              let total = result.total;
+              var i = 1;
+              while (i <= total) {
+                $("#studenttable").append("<tr><td>" + r[i]["Enroll"] + "</td><td>" + r[i]["name"] + "</td><td>" + r[i]["fathername"] + "</td><td class='text-center'><div class=\"input-group\"><input class='form-control' onkeyup=\"checkfees(this.id)\" onchange=\"checkfees(this.id)\" value=\"" + r[i]["feespaid"] + "\" id = 'fac" + r[i]["Enroll"] + "id' type='number' max=" + r[i]["totalfees"] + " placeholder='Paid'><input class='form-control' id = 'fac" + r[i]["Enroll"] + "idtotal' type='number' value=\"" + r[i]["totalfees"] + "\" placeholder='Out of' disabled></div><p style=\"color:red\" id = 'fac" + r[i]["Enroll"] + "iderror' hidden></p></td></tr>");
+                i++;
+              }
+            },
+            error: function (error) {
+              $.notify({
+                message: "Unable to fetch students data. Please try again later."
+              }, {
+                  type: 'danger'
+                });
+            }
+          })
+        }
+        else {
+          if (!document.getElementById("student_year").value) {
+            $("#datemsg").prop("hidden", false)
+            $("#datemsg2").prop("hidden", true)
+            $("#studenthidden").prop("hidden", true);
+          }
+          else if (!document.getElementById("student_std").value) {
+            $("#datemsg2").prop("hidden", false)
+            $("#datemsg").prop("hidden", true)
+            $("#studenthidden").prop("hidden", true);
+          }
+
+        }
+      }
+      $("#totalfeesform").submit(function (event) {
+        event.preventDefault();
+        $("#setfees").modal("hide")
+        dataa = {};
+        for (i = 1; i <= 12; i++) {
+          temp = String("Standard" + (i))
+          dataa[String("std" + i)] = document.getElementById(temp).value
+        }
+        $.ajax({
+          type: 'POST',
+          dataType: 'JSON',
+          data: dataa,
+          url: '/settotalfees/',
+          success: function (result) {
+            document.getElementById("totalfeesform").reset();
+            $("#h1").prop("hidden", true);
+            $("#h2").prop("hidden", false);
+            $.notify({
+              message: "total fees record successfully set ."
+            }, {
+                type: 'success'
+              });
+          },
+          error: function (error) {
+            $.notify({
+              message: "Unable to set total fees record. Please try again later."
+            }, {
+                type: 'danger'
+              });
+          }
+        })
+      })
+      function submitstudentfees() {
+        stds = document.getElementById('student_std').value;
+        yearofpay = document.getElementById('student_year').value;
+        var i = 1;
+        var enteredfees, totalfees;
+        data = datag;
+        var data3 = {
+          "total": datat,
+          "payyear": yearofpay,
+          "standard2": stds,
+        };
+        while (i <= datat) {
+          if (!document.getElementById("fac" + data[i]["Enroll"] + "id").value) {
+            document.getElementById("fac" + data[i]["Enroll"] + "id").value = 0;
+          }
+          enteredfees = parseInt(document.getElementById("fac" + data[i]["Enroll"] + "id").value)
+          totalfees = parseInt(document.getElementById("fac" + data[i]["Enroll"] + "idtotal").value)
+          if (enteredfees > totalfees) {
+            error = $("#fac" + data[i]["Enroll"] + "iderror");
+            error.prop("hidden", false);
+            error.html("Invalid entry.");
+            return null;
+          }
+          else {
+            data3[String(data[i]["Enroll"])] = $('#fac' + data[i]["Enroll"] + "id").val();
+            i++;
+          }
+        }
+        console.log("vrushank")
+        $("#insertmodel").modal("hide");
+        $.ajax({
+          type: 'POST',
+          dataType: 'JSON',
+          url: '/insertstufees/',
+          data: data3,
+          success: function (result) {
+            $.notify({
+              message: result.msg
+            }, {
+                type: 'success'
+              });
+          },
+          error: function (error) {
+            $.notify({
+              message: "Unable to store fees data. Please try again later."
+            }, {
+                type: 'danger'
+              });
+          }
+        })
+      }
+    </script>
+</body>
+
+</html>
