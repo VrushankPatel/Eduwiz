@@ -242,7 +242,7 @@ def signinwithparam(request,passparam):
         else:
             return render(request,"home/static/error/error.html")
     except Exception as e:
-        print(e)
+        #print(e)
         response = HttpResponseRedirect('/signin')
         response.delete_cookie('idloggedin')
         return response            
