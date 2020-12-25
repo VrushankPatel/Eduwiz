@@ -46,26 +46,7 @@
                                 </div>
                             </div>
                         </div>                     
-                        
-                        <h2 class="title">Create dashboard account</h2>                        
-                                <div class="input-group">
-                                    <label class="label">Dashboard ID</label>
-                                    <input class="input--style-4" type="text" name="dashboardid" autocomplete="off" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'ID must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters' : '');" placeholder="Ex. John@2579">
-                                </div>
-                        <div class="row row-space">
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Choose Password</label>
-                                    <input class="input--style-4" type="Password" name="dashboardpwd"autocomplete="off" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Password must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters' : ''); if(this.checkValidity()) form.dashboardpwd2.pattern = this.value;">
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Confirm Password</label>
-                                    <input class="input--style-4" type="Password" name="dashboardpwd2" autocomplete="off" required onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Passwords doesn't match : '');" title="Passwords doesnt match">
-                                </div>
-                            </div>
-                        </div>
+                                                
                         <div class="p-t-15">
                             <button class="btn btn--radius-2 btn--blue" style="float:right" type="submit">Next</button>
                         </div>

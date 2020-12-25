@@ -62,12 +62,12 @@ def signup(request):
             to_list = [request.POST["email"]]            
             subject = "Eduwiz account verification"
             send_html_mail(subject,str("OTP (One time password for your eduwiz account sign up is <br><h1>%s</h1>" % a1),to_list)
-            send_sms(str("91"+request.POST["phone"]),str("OTP (One time password for your eduwiz account sign up is %s" % a2))
+            # send_sms(str("91"+request.POST["phone"]),str("OTP (One time password for your eduwiz account sign up is %s" % a2))
             a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
             a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
-            return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msg2": "Enter OTP sended to your mobile", "msgcolor": "blue"})          
+            return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msgcolor": "blue"})          
         elif request.POST['checker'] == "verify" and not checkifexists(request.POST['email']):
-            if request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest() and request.POST["privatedata2"] == hashlib.md5(("%s" % request.POST["OTPmobile"]).encode()).hexdigest():
+            if request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest():
                 return render(request, "home/static/templates/Signup/password.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "checker": "password"})
             else:
                 return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": request.POST["privatedata1"], "privatedata2": request.POST["privatedata2"], "checker": "verify", "OTP1": not (request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest()), "OTP2": not (request.POST["privatedata2"] == hashlib.md5(("%s" % request.POST["OTPmobile"]).encode()).hexdigest()), "firstotp": request.POST["OTPemail"], "secondotp": request.POST["OTPmobile"], "msg": "Invalid OTP", "msg2": "Invalid OTP", "msgcolor": "red"})
@@ -86,9 +86,9 @@ def signup(request):
         elif request.POST['checker'] == "schooldetails" and not checkifexists(request.POST['email']):
             return render(request, "home/static/templates/Signup/createacc.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthdate"], "gender": request.POST["gender"], "email": request.POST["email"], "adminmobile": request.POST["adminmobile"] , "schoolname": request.POST["schoolname"], "schooladdress": request.POST["schooladdress"], "schoolmobile": request.POST["schoolmobile"], "privatedata1": request.POST["privatedata1"], "checker": "createacc"})
         elif request.POST['checker'] == "createacc" and not checkifexists(request.POST['email']):
-            data = {"admin_name":str(request.POST["first_name"] + " " + request.POST["last_name"]),"admin_dob":str(request.POST["birthdate"]),"admin_gender":str(request.POST["gender"]),"admin_email":str(request.POST["email"]),"admin_mobile":int(request.POST["adminmobile"]),"admin_pwd":str(request.POST["privatedata1"]),"school_name":str(request.POST["schoolname"]),"school_address":str(request.POST["schooladdress"]),"school_mobile":int(request.POST["schoolmobile"]),"clerk_name":str(request.POST["clerkname"]),"clerk_id":str(request.POST["clerkid"]),"clerk_pwd":str(rc4(request.POST["clerkpwd"],request.POST["clerkid"])),"dashboard_id":str(request.POST["dashboardid"]),"dashboard_pwd":str(rc4(request.POST["dashboardpwd"],request.POST["dashboardid"]))}
+            data = {"admin_name":str(request.POST["first_name"] + " " + request.POST["last_name"]),"admin_dob":str(request.POST["birthdate"]),"admin_gender":str(request.POST["gender"]),"admin_email":str(request.POST["email"]),"admin_mobile":int(request.POST["adminmobile"]),"admin_pwd":str(request.POST["privatedata1"]),"school_name":str(request.POST["schoolname"]),"school_address":str(request.POST["schooladdress"]),"school_mobile":int(request.POST["schoolmobile"]),"clerk_name":str(request.POST["clerkname"]),"clerk_id":str(request.POST["clerkid"]),"clerk_pwd":str(rc4(request.POST["clerkpwd"],request.POST["clerkid"]))}
 
-            admindata = Administrator(admin_name=data["admin_name"], admin_dob=data["admin_dob"],admin_gender=data["admin_gender"],admin_mobile=data["admin_mobile"],admin_email=data["admin_email"],admin_pwd=data["admin_pwd"],school_name=data["school_name"],school_address=data["school_address"],school_mobile=data["school_mobile"],clerk_name=data["clerk_name"],clerk_id=data["clerk_id"],clerk_pwd=data["clerk_pwd"],dashboard_id=data["dashboard_id"],dashboard_pwd=data["dashboard_pwd"])
+            admindata = Administrator(admin_name=data["admin_name"], admin_dob=data["admin_dob"],admin_gender=data["admin_gender"],admin_mobile=data["admin_mobile"],admin_email=data["admin_email"],admin_pwd=data["admin_pwd"],school_name=data["school_name"],school_address=data["school_address"],school_mobile=data["school_mobile"],clerk_name=data["clerk_name"],clerk_id=data["clerk_id"],clerk_pwd=data["clerk_pwd"])
 
             admindata.save()
             return render(request,"home/static/templates/success.html",{"id":admindata.id})
@@ -625,42 +625,6 @@ def shuffle_words(word_a, word_b):
     random.shuffle(lst)
     shuffled_word = ''.join(lst[:len(word_a)]) + ''.join(lst[len(word_a):]) 
     return shuffled_word
-
-def send(mobile,msg):
-    if type(mobile) is not str:
-        return "Please enter valid phone number in string format"
-    elif type(msg) is not str:
-        return "Please enter valid message in string format"
-    f1=open("api.txt","r")
-    a=list()
-    temp=f1.readline()
-    while temp:
-        a.append([temp[:32],temp[32:48]])
-        temp=f1.readline()
-    f1.close()
-    response = requests.post('http://www.way2sms.com/api/v1/sendCampaign',{'apikey':a[0][0],'secret':a[0][1],'usetype':'stage','phone': mobile,'message':msg,'senderid':''})
-    b=a;
-    while response.text.find("\"status\":\"error\"") is not -1:
-        if response.text.find("\"message\":\"API and Secret keys are expired.\"") is not -1:
-            del a[0];
-            response = requests.post('http://www.way2sms.com/api/v1/sendCampaign',{'apikey':a[0][0],'secret':a[0][1],'usetype':'stage','phone': mobile,'message':msg,'senderid':''})
-            b=a
-        if response.text.find("\"message\":\"Invalid phone number is given.\"") is not -1:
-            return "invalidmobile"
-        if response.text.find("\"message\":\"API and Secret key verification failed.\"") is not -1:
-            if len(b)!=1:
-                del b[0]
-                response = requests.post('http://www.way2sms.com/api/v1/sendCampaign',{'apikey':b[0][0],'secret':b[0][1],'usetype':'stage','phone': mobile,'message':msg,'senderid':''})
-            else:
-                return "API and secret keys can not matched"
-    f1=open("api.txt","w")
-    newtext=""
-    for i,j in a:
-        newtext=newtext+i+j+"\n"
-    f1.write(newtext)
-    del newtext
-    f1.close()
-    return "success"
     
 def gettotalfees(std,Schoolid):    
     if std == 1:

@@ -14,9 +14,7 @@ class Administrator(models.Model):
     school_mobile = models.PositiveIntegerField()
     clerk_name = models.CharField(max_length=100)
     clerk_id = models.TextField()
-    clerk_pwd = models.TextField()
-    dashboard_id = models.TextField()
-    dashboard_pwd = models.TextField()
+    clerk_pwd = models.TextField()    
 
     def __str__(self):
         return str(str(self.id)+" "+self.admin_name)
