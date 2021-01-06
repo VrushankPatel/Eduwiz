@@ -11,10 +11,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 # sudo -H vi /etc/environment
 # USER_ID = ""
 # PASSWORD = ""
-# EMAIL_HOST_USER = str(os.environ['USER_ID']) # write Mail ID here
-# EMAIL_HOST_PASSWORD = str(os.environ['PASSWORD']) # Write Password here
-EMAIL_HOST_USER = "serviceeduwiz@gmail.com"
-EMAIL_HOST_PASSWORD = "v9033303038"
+EMAIL_HOST_USER = str(os.environ['USER_ID']) # write Mail ID here
+EMAIL_HOST_PASSWORD = str(os.environ['PASSWORD']) # Write Password here
 EMAIL_PORT = 587
 
 INSTALLED_APPS = [
