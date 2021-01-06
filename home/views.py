@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404,HttpResponseRedirect,JsonResponse
-from arc4 import ARC4
 from django.views.decorators.csrf import csrf_exempt
 from home.models import *
 from django.core.mail import send_mail,EmailMessage
@@ -13,7 +12,6 @@ import smtplib
 import requests
 from datetime import date,datetime
 import threading
-# Create your views here.
 
 class EmailThread(threading.Thread):
     def __init__(self, subject, html_content, recipient_list):
@@ -51,8 +49,7 @@ def features(request):
     return render(request, "home/static/templates/Home/features.html")
 
 def signup(request):
-    if request.method == "GET":
-        # /Signup/signup.html
+    if request.method == "GET":        
         return render(request, "home/static/templates/Signup/signup.html", {"checker": "signup"})
     else:
         if request.POST['checker'] == "signup" and not checkifexists(request.POST['email']) and not checkifexistsmob(request.POST["phone"]):            
@@ -61,8 +58,7 @@ def signup(request):
             a2 = random.randrange(100000, 1000000)            
             to_list = [request.POST["email"]]            
             subject = "Eduwiz account verification"
-            send_html_mail(subject,str("OTP (One time password for your eduwiz account sign up is <br><h1>%s</h1>" % a1),to_list)
-            # send_sms(str("91"+request.POST["phone"]),str("OTP (One time password for your eduwiz account sign up is %s" % a2))
+            send_html_mail(subject,str("OTP (One time password for your eduwiz account sign up is <br><h1>%s</h1>" % a1),to_list)            
             a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
             a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
             return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msgcolor": "blue"})          
@@ -250,8 +246,7 @@ def signinwithparam(request,passparam):
     return response  
     
 def rc4(encryptiontext, key):
-    return ARC4(hashlib.md5(key.encode()).hexdigest()).encrypt(hashlib.md5(encryptiontext.encode()).hexdigest())
-
+    return str(hashlib.md5(key.encode() + hashlib.md5(encryptiontext.encode()).hexdigest().encode()).hexdigest())
 
 def sendmail(msg, destinationaddress):
     try:
