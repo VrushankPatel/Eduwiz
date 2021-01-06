@@ -1,5 +1,14 @@
 {
-    "scripts": {
-        "start": "pip install -r requirements.txt && python3 manage.py runserver $PORT"
-    }
+	"name": "Eduwiz",
+	"version": "1.0.0",
+	"main": "temp.js",
+	"scripts": {
+		"start": "node temp.js"
+	},
+	"dependencies": {
+		"axios": "^0.20.0"
+	},
+	"author": "Vrushank Patel",
+	"license": "ISC",
+	"description": "This is the Node runner of Eduwiz"
 }
