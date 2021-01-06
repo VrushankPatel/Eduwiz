@@ -1,5 +1,5 @@
 {
     "scripts": {
-        "start": "python3 manage.py runserver $PORT",    
+        "start": "pip install -r requirements.txt && python3 manage.py runserver $PORT",        
     }
 }
