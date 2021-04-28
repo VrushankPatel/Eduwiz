@@ -4,7 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "q2l68t*ua$fbgb*7k(-3oi*+5j-1w*ivcn8&+99%4)h&9j2tq+"
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://eduwiz.herokuapp.com"]
+ALLOWED_HOSTS = ["https://eduwiz.herokuapp.com", "*"]
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
@@ -27,7 +27,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -102,22 +101,14 @@ USE_L10N = True
 USE_TZ = True
 
 
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
-STATIC_ROOT  =   os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = '/static/'
+PROJECT_ROOT = os.path.join(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
+STATIC_URL = "/static/"
 
 # Extra lookup directories for collectstatic to find static files
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"),)
 
-#  Add configuration for static files storage using whitenoise
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
-import dj_database_url 
-prod_db  =  dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(prod_db)
+# #  Add configuration for static files storage using whitenoise
+# STATICFILES_STORAGE = "whitenoise.django.GzipManifestStaticFilesStorage"
