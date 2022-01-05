@@ -3,12 +3,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'q2l68t*ua$fbgb*7k(-3oi*+5j-1w*ivcn8&+99%4)h&9j2tq+'
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.17.205.124', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = "feedback4projectblog@gmail.com" # write email ID here
-EMAIL_HOST_PASSWORD = "v9033303038" # Write Password here
+EMAIL_HOST_USER = "" # write email ID here
+EMAIL_HOST_PASSWORD = "" # Write Password here
 EMAIL_PORT = 587
 
 INSTALLED_APPS = [

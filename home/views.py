@@ -60,13 +60,8 @@ def signup(request):
             subject = "Eduwiz account verification"
             send_html_mail(subject,str("OTP (One time password for your eduwiz account sign up is <br><h1>%s</h1>" % a1),to_list)            
             a1 = hashlib.md5(("%s" % a1).encode()).hexdigest()
-            a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()
-            return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": a1, "privatedata2": a2, "checker": "verify", "raiseerror": "", "OTP1": "False", "OTP2": "True", "msg": "Enter OTP sended to your email", "msgcolor": "blue"})          
-        elif request.POST['checker'] == "verify" and not checkifexists(request.POST['email']):
-            if request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest():
-                return render(request, "home/static/templates/Signup/password.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "checker": "password"})
-            else:
-                return render(request, "home/static/templates/Signup/verify.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "privatedata1": request.POST["privatedata1"], "privatedata2": request.POST["privatedata2"], "checker": "verify", "OTP1": not (request.POST["privatedata1"] == hashlib.md5(("%s" % request.POST["OTPemail"]).encode()).hexdigest()), "OTP2": not (request.POST["privatedata2"] == hashlib.md5(("%s" % request.POST["OTPmobile"]).encode()).hexdigest()), "firstotp": request.POST["OTPemail"], "secondotp": request.POST["OTPmobile"], "msg": "Invalid OTP", "msg2": "Invalid OTP", "msgcolor": "red"})
+            a2 = hashlib.md5(("%s" % a2).encode()).hexdigest()            
+            return render(request, "home/static/templates/Signup/password.html", {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "mobile": request.POST["phone"], "checker": "password"})            
         elif request.POST['checker'] == "password" and not checkifexists(request.POST['email']):            
             return render(request, "home/static/templates/Signup/createacc.html",     {"firstname": request.POST["first_name"], "lastname": request.POST["last_name"], "dob": request.POST["birthday"], "gender": request.POST["gender"], "email": request.POST["email"], "adminmobile": request.POST["phone"], "privatedata1" : rc4(request.POST["pwd"], request.POST["email"]), "checker": "createacc"})
         elif request.POST['checker'] == "resend" and not checkifexists(request.POST['email']):
